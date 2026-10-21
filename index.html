@@ -219,4 +219,63 @@ function escapeText(value){
 
 </script>/body>
 
+
+<section id="jobs-cvs" style="max-width:900px;margin:30px auto;padding:20px;font-family:Arial,sans-serif;">
+
+  <h2>Jobs &amp; CVs — Build Your Future</h2>
+
+  <p>Prepare your job-seeker profile and get ready to explore career opportunities.</p>
+
+  <form id="jobForm">
+
+    <p><input id="jobName" placeholder="Your full name" required style="width:100%;padding:12px;box-sizing:border-box;"></p>
+
+    <p><input id="jobTitle" placeholder="Job you are looking for" required style="width:100%;padding:12px;box-sizing:border-box;"></p>
+
+    <p><input id="jobEmail" type="email" placeholder="Your email address" required style="width:100%;padding:12px;box-sizing:border-box;"></p>
+
+    <p><textarea id="jobSkills" placeholder="Your skills and experience" required style="width:100%;padding:12px;box-sizing:border-box;"></textarea></p>
+
+    <button type="submit" style="padding:12px 20px;background:#185237;color:white;border:0;border-radius:6px;">Preview My Profile</button>
+
+  </form>
+
+  <div id="jobResult" style="margin-top:20px;"></div>
+
+  <p><small>This is a demo. Your information is previewed on this device and is not saved to a public database or sent to employers.</small></p>
+
+</section>
+
+<script>
+
+document.getElementById("jobForm").addEventListener("submit",function(event){
+
+  event.preventDefault();
+
+  function safe(value){
+
+    return value.replace(/[&<>"']/g,function(char){
+
+      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[char];
+
+    });
+
+  }
+
+  document.getElementById("jobResult").innerHTML =
+
+    "<h3>Your Job-Seeker Profile Preview</h3>" +
+
+    "<p><strong>Name:</strong> "+safe(document.getElementById("jobName").value)+"</p>" +
+
+    "<p><strong>Desired job:</strong> "+safe(document.getElementById("jobTitle").value)+"</p>" +
+
+    "<p><strong>Email:</strong> "+safe(document.getElementById("jobEmail").value)+"</p>" +
+
+    "<p><strong>Skills and experience:</strong> "+safe(document.getElementById("jobSkills").value)+"</p>";
+
+});
+
+</script>
+
 </html>
