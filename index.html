@@ -323,5 +323,20 @@ document.getElementById("jobForm").addEventListener("submit",function(event){
   <p><small>This is a starter section. Fashion listings are not yet connected to a public database.</small></p>
 
 </section>
+  </section>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL = "PASTE_https://bzfaizfpnlqnpyopgggi.supabase.co_URL_HERE";
+const SUPABASE_KEY = "PASTE_sb_publishable_4xFKOHNp1h6pgTo2NmiHVA_E0oibBdh_KEY_HERE";
+
+const ventoraSupabase = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+</script>
+
+</body>
+</html>
   </body>
 </html>
