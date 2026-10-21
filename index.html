@@ -171,6 +171,52 @@ footer a{color:#f2c45a}
 
 </footer>
 
-</body>
+<<section id="business-listings" style="max-width:900px;margin:30px auto;padding:20px;">
+
+  <h2>Business Hub — Promote Your Business</h2>
+
+  <p>Share your business with the VENTORA community.</p>
+
+  <form id="businessForm">
+
+    <p><input id="businessName" placeholder="Business name" required style="width:100%;padding:12px;"></p>
+
+    <p><input id="businessType" placeholder="Type of business" required style="width:100%;padding:12px;"></p>
+
+    <p><input id="businessContact" placeholder="Contact email or phone" required style="width:100%;padding:12px;"></p>
+
+    <p><textarea id="businessDescription" placeholder="Describe your business" required style="width:100%;padding:12px;"></textarea></p>
+
+    <button type="submit" style="padding:12px 20px;background:#185237;color:white;border:0;border-radius:6px;">Preview My Listing</button>
+
+  </form>
+
+  <div id="businessResult" style="margin-top:20px;"></div>
+
+</section>
+
+<script>
+
+document.getElementById("businessForm").addEventListener("submit",function(event){
+
+  event.preventDefault();
+
+  document.getElementById("businessResult").innerHTML =
+
+    "<h3>Business Listing Preview</h3><p><strong>"+escapeText(document.getElementById("businessName").value)+"</strong></p><p>"+escapeText(document.getElementById("businessType").value)+"</p><p>"+escapeText(document.getElementById("businessDescription").value)+"</p><p>Contact: "+escapeText(document.getElementById("businessContact").value)+"</p><p>Your preview is shown on this device only. It has not been published as a public listing.</p>";
+
+});
+
+function escapeText(value){
+
+  return value.replace(/[&<>"']/g,function(char){
+
+    return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[char];
+
+  });
+
+}
+
+</script>/body>
 
 </html>
