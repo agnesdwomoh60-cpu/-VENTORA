@@ -197,15 +197,36 @@ footer a{color:#f2c45a}
 
 <script>
 
-document.getElementById("businessForm").addEventListener("submit",function(event){
 
+document.getElementById("businessForm").addEventListener("submit", async function(event) {
   event.preventDefault();
 
+  const businessName = document.getElementById("businessName").value.trim();
+  const businessDescription = document.getElementById("businessDescription").value.trim();
+  const businessContact = document.getElementById("businessContact").value.trim();
+
+  const { error } = await ventoraSupabase
+    .from("ventora_business_listings")
+    .insert({
+      business_name: businessName,
+      phone: businessContact,
+      description: businessDescription
+    });
+
+  if (error) {
+    document.getElementById("businessResult").textContent =
+      "Unable to save your listing: " + error.message;
+    return;
+  }
+
   document.getElementById("businessResult").innerHTML =
-
-    "<h3>Business Listing Preview</h3><p><strong>"+escapeText(document.getElementById("businessName").value)+"</strong></p><p>"+escapeText(document.getElementById("businessType").value)+"</p><p>"+escapeText(document.getElementById("businessDescription").value)+"</p><p>Contact: "+escapeText(document.getElementById("businessContact").value)+"</p><p>Your preview is shown on this device only. It has not been published as a public listing.</p>";
-
+    "<h3>Business Listing Saved!</h3><p><strong>" +
+    escapeText(businessName) +
+    "</strong></p><p>" +
+    escapeText(businessDescription) +
+    "</p><p>Your listing has been saved to VENTORA.</p>";
 });
+
 
 function escapeText(value){
 
