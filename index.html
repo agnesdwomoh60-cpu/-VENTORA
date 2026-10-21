@@ -1,3 +1,6 @@
+
+
+
 <!DOCTYPE html>
 
 <html lang="en">
@@ -8,85 +11,51 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>VENTORA</title>
+<title>VENTORA | Opportunities Without Borders</title>
 
 <style>
 
-* { box-sizing: border-box; }
+*{box-sizing:border-box}
 
-body {
+body{margin:0;font-family:Arial,sans-serif;color:#202b25;background:#f6f8f5;line-height:1.6}
 
-  margin: 0;
+header{background:#123d2b;color:white;padding:22px 18px}
 
-  font-family: Arial, sans-serif;
+nav{max-width:1050px;margin:auto;display:flex;justify-content:space-between;align-items:center;gap:15px;flex-wrap:wrap}
 
-  background: #f5f7f4;
+.logo{font-size:27px;font-weight:bold;letter-spacing:2px}
 
-  color: #20352d;
+nav a{color:white;text-decoration:none;margin:5px;font-size:14px}
 
-}
+.hero{background:linear-gradient(135deg,#123d2b,#26734c);color:white;text-align:center;padding:65px 20px}
 
-header {
+.hero h1{font-size:clamp(32px,7vw,52px);line-height:1.15;margin:0 auto 18px}
 
-  background: #173b32;
+.hero p{max-width:650px;margin:0 auto 25px;color:#e3f1e8}
 
-  color: white;
+.btn{display:inline-block;background:#f2c45a;color:#183b2a;padding:12px 22px;border-radius:7px;text-decoration:none;font-weight:bold}
 
-  text-align: center;
+section{max-width:1050px;margin:auto;padding:42px 18px}
 
-  padding: 35px 15px;
+.intro{text-align:center}
 
-}
+.intro h2{font-size:28px;margin-bottom:8px}
 
-header h1 { font-size: 36px; margin: 0 0 10px; }
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;margin-top:25px}
 
-main { max-width: 700px; margin: auto; padding: 22px 15px; }
+.card{background:white;border:1px solid #e3e9e3;border-radius:14px;padding:24px;box-shadow:0 4px 15px #173d2b0a}
 
-.intro { text-align: center; margin-bottom: 25px; }
+.card .symbol{font-size:32px}
 
-.card {
+.card h3{color:#185237;margin:10px 0}
 
-  background: white;
+.card a{color:#17683e;font-weight:bold;text-decoration:none}
 
-  border-radius: 14px;
+.notice{background:#e8f2eb;padding:18px;border-radius:10px;margin-top:25px}
 
-  padding: 22px;
+footer{background:#123d2b;color:#e5f0e8;text-align:center;padding:25px 15px;font-size:14px}
 
-  margin-bottom: 16px;
-
-  border: 1px solid #dce5de;
-
-}
-
-.card h2 { margin-top: 0; }
-
-.card p { line-height: 1.6; }
-
-button {
-
-  background: #1e604d;
-
-  color: white;
-
-  border: 0;
-
-  border-radius: 8px;
-
-  padding: 12px 17px;
-
-  font-size: 15px;
-
-}
-
-footer {
-
-  text-align: center;
-
-  padding: 20px;
-
-  color: #52635b;
-
-}
+footer a{color:#f2c45a}
 
 </style>
 
@@ -96,57 +65,109 @@ footer {
 
 <header>
 
-  <h1>VENTORA</h1>
+<nav>
 
-  <p>One platform. More opportunities.</p>
+<div class="logo">VENTORA</div>
+
+<div>
+
+<a href="#business">Business</a>
+
+<a href="#jobs">Jobs & CVs</a>
+
+<a href="#fashion">African Fashion</a>
+
+</div>
+
+</nav>
 
 </header>
 
-<main>
+<div class="hero">
 
-  <section class="intro">
+<h1>One Platform.<br>More Opportunities.</h1>
 
-    <h2>Discover More with VENTORA</h2>
+<p>Discover business opportunities, explore jobs, build your career and celebrate African fashion — all in one place.</p>
 
-    <p>Your destination for business, careers, and African fashion.</p>
+<a class="btn" href="#explore">Explore VENTORA</a>
 
-  </section>
+</div>
 
-  <section class="card">
+<section id="explore" class="intro">
 
-    <h2>Business Hub</h2>
+<h2>Explore Our World</h2>
 
-    <p>Showcase your business, promote products, and connect with customers.</p>
+<p>Connecting people, ideas, careers and creativity across Africa and beyond.</p>
 
-    <button onclick="alert('Business Hub is coming soon!')">Explore Business</button>
+<div class="cards">
 
-  </section>
+<div class="card" id="business">
 
-  <section class="card">
+<div class="symbol">🌍</div>
 
-    <h2>Jobs &amp; CVs</h2>
+<h3>Business Hub</h3>
 
-    <p>Prepare for job applications, improve your CV, and develop interview skills.</p>
+<p>Discover business ideas, promote your services and connect with opportunities.</p>
 
-    <button onclick="alert('Jobs & CVs is coming soon!')">Explore Careers</button>
+<a href="#contact">Explore Business →</a>
 
-  </section>
+</div>
 
-  <section class="card">
+<div class="card" id="jobs">
 
-    <h2>African Fashion</h2>
+<div class="symbol">💼</div>
 
-    <p>Discover fashion designers, clothing sellers, and African styles.</p>
+<h3>Jobs & CVs</h3>
 
-    <button onclick="alert('African Fashion is coming soon!')">Explore Fashion</button>
+<p>Find career opportunities and prepare to present your skills to employers.</p>
 
-  </section>
+<a href="#contact">Explore Careers →</a>
 
-</main>
+</div>
+
+<div class="card" id="fashion">
+
+<div class="symbol">👗</div>
+
+<h3>African Fashion</h3>
+
+<p>Celebrate African designers, beautiful styles, fashion brands and creativity.</p>
+
+<a href="#contact">Explore Fashion →</a>
+
+</div>
+
+</div>
+
+<div class="notice">
+
+<strong>Welcome to VENTORA!</strong>
+
+<p>We are building a platform for business, careers and African fashion. More features will be introduced as the platform grows.</p>
+
+</div>
+
+</section>
+
+<section id="contact" class="intro">
+
+<h2>Be Part of VENTORA</h2>
+
+<p>Interested in joining our growing platform? Contact the VENTORA team to discuss your ideas and opportunities.</p>
+
+<a class="btn" href="mailto:ventora.contact@gmail.com?subject=VENTORA%20Enquiry">Contact Us</a>
+
+<p><small>Note: Replace this sample email address with your real contact email before launch.</small></p>
+
+</section>
 
 <footer>
 
-  <p>VENTORA — Opportunities without borders.</p>
+<strong>VENTORA</strong>
+
+<p>Business • Careers • African Fashion</p>
+
+<p>Building opportunities without borders.</p>
 
 </footer>
 
