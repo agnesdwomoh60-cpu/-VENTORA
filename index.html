@@ -259,6 +259,7 @@ function escapeText(value){
 
     <p><textarea id="jobSkills" placeholder="Your skills and experience" required style="width:100%;padding:12px;box-sizing:border-box;"></textarea></p>
 <p><label for="cvFile">Upload your CV (PDF, DOC, or DOCX):</label><br><input type="file" id="cvFile" accept=".pdf,.doc,.docx" required style="width:100%;padding:12px;box-sizing:border-box;"></p>
+  <p id="cvPreview"></p>
     <button type="submit" style="padding:12px 20px;background:#185237;color:white;border:0;border-radius:6px;">Preview My Profile</button>
 
   </form>
@@ -270,6 +271,19 @@ function escapeText(value){
 </section>
 
 <script>
+
+document.getElementById("cvFile").addEventListener("change", function () {
+  const file = this.files[0];
+  const preview = document.getElementById("cvPreview");
+
+  if (!file) {
+    preview.innerHTML = "";
+    return;
+  }
+
+  const url = URL.createObjectURL(file);
+  preview.innerHTML = '<a href="' + url + '" target="_blank" rel="noopener">Open selected CV</a>';
+});
 
 document.getElementById("jobForm").addEventListener("submit",async function(event){
 
