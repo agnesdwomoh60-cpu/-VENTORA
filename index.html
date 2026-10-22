@@ -258,7 +258,7 @@ function escapeText(value){
     <p><input id="jobEmail" type="email" placeholder="Your email address" required style="width:100%;padding:12px;box-sizing:border-box;"></p>
 
     <p><textarea id="jobSkills" placeholder="Your skills and experience" required style="width:100%;padding:12px;box-sizing:border-box;"></textarea></p>
-
+<p><label for="cvFile">Upload your CV (PDF, DOC, or DOCX):</label><br><input type="file" id="cvFile" accept=".pdf,.doc,.docx" required style="width:100%;padding:12px;box-sizing:border-box;"></p>
     <button type="submit" style="padding:12px 20px;background:#185237;color:white;border:0;border-radius:6px;">Preview My Profile</button>
 
   </form>
@@ -284,13 +284,35 @@ document.getElementById("jobForm").addEventListener("submit",async function(even
     });
 
   }
-const { error: saveError } = await ventoraSupabase
+const cvFile = document.getElementById("cvFile").files[0];
+
+if (!cvFile) {
+  document.getElementById("jobResult").textContent =
+    "Please select your CV file.";
+  return;
+}
+
+const cvPath = Date.now() + "-" +
+  cvFile.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+
+const { error: uploadError } = await ventoraSupabase
+  .storage
+  .from("ventora-cvs")
+  .upload(cvPath, cvFile);
+
+if (uploadError) {
+  document.getElementById("jobResult").textContent =
+    "Unable to upload CV: " + uploadError.message;
+  return;
+}
+  const { error: saveError } = await ventoraSupabase
   .from("ventora_job_profiles")
   .insert({
     full_name: document.getElementById("jobName").value.trim(),
     desired_job: document.getElementById("jobTitle").value.trim(),
     email: document.getElementById("jobEmail").value.trim(),
-    skills_experience: document.getElementById("jobSkills").value.trim()
+  skills_experience: document.getElementById("jobSkills").value.trim(),
+cv_path: cvPath
   });
 
 if (saveError) {
