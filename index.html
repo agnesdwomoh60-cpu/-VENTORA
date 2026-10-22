@@ -271,7 +271,7 @@ function escapeText(value){
 
 <script>
 
-document.getElementById("jobForm").addEventListener("submit",function(event){
+document.getElementById("jobForm").addEventListener("submit",async function(event){
 
   event.preventDefault();
 
@@ -284,7 +284,20 @@ document.getElementById("jobForm").addEventListener("submit",function(event){
     });
 
   }
+const { error: saveError } = await ventoraSupabase
+  .from("ventora_job_profiles")
+  .insert({
+    full_name: document.getElementById("jobName").value.trim(),
+    desired_job: document.getElementById("jobTitle").value.trim(),
+    email: document.getElementById("jobEmail").value.trim(),
+    skills_experience: document.getElementById("jobSkills").value.trim()
+  });
 
+if (saveError) {
+  document.getElementById("jobResult").textContent =
+    "Unable to save profile: " + saveError.message;
+  return;
+}
   document.getElementById("jobResult").innerHTML =
 
     "<h3>Your Job-Seeker Profile Preview</h3>" +
