@@ -194,7 +194,8 @@ footer a{color:#f2c45a}
   <div id="businessResult" style="margin-top:20px;"></div>
 
 </section>
-
+<h3>Saved Business Listings</h3>
+<div id="savedBusinessListings">Loading business listings...</div>
 <script>
 
 
@@ -356,6 +357,38 @@ const ventoraSupabase = window.supabase.createClient(
   SUPABASE_URL,
   SUPABASE_KEY
 );
+  async function loadSavedBusinesses() {
+  const list = document.getElementById("savedBusinessListings");
+
+  if (!list) return;
+
+  const { data, error } = await ventoraSupabase
+    .from("ventora_business_listings")
+    .select("business_name, description, phone")
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    list.textContent = "Unable to load business listings.";
+    return;
+  }
+
+  if (!data || data.length === 0) {
+    list.textContent = "No businesses listed yet.";
+    return;
+  }
+
+  list.innerHTML = data.map(business =>
+    "<div class='card'><h3>" +
+    escapeText(business.business_name || "") +
+    "</h3><p>" +
+    escapeText(business.description || "") +
+    "</p><p>" +
+    escapeText(business.phone || "") +
+    "</p></div>"
+  ).join("");
+}
+
+loadSavedBusinesses();
 </script>
 
 </body>
