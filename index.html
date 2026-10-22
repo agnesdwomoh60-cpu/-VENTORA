@@ -298,11 +298,9 @@ if (saveError) {
     "Unable to save profile: " + saveError.message;
   return;
 }
-  "<h3>Profile saved successfully!</h3>" +
-"<h4>Your Job-Seeker Profile Preview</h4>" +
-
+  document.getElementById("jobResult").innerHTML =
     "<h3>Profile saved successfully!</h3>" +
-"<h4>Your Job-Seeker Profile Preview</h4>" +
+    "<h4>Your Job-Seeker Profile Preview</h4>" +
 
     "<p><strong>Name:</strong> "+safe(document.getElementById("jobName").value)+"</p>" +
 
