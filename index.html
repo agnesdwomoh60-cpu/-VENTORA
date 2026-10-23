@@ -438,7 +438,15 @@ document.getElementById("registerAccount").addEventListener("click", async funct
     return;
   }
 
-  const { error } = await ventoraSupabase.auth.signUp({
+  
+const { error } = await ventoraSupabase.auth.signUp({
+  email: email,
+  password: password,
+  options: {
+    emailRedirectTo: "https://agnesdwomoh60-cpu.github.io/-VENTORA/"
+  }
+});
+
     email: email,
     password: password
   });
