@@ -480,9 +480,11 @@ document.getElementById("signInAccount").addEventListener("click", async functio
       result.textContent += " Please try again later.";
       }
     else if (adminRecord) {
-result.textContent = "Signed in successfully. Administrator access confirmed.";
+document.getElementById("adminDashboard").hidden = false;
+      result.textContent = "Signed in successfully. Administrator access confirmed.";
    }
     else {
+      document.getElementById("adminDashboard").hidden = true;
 result.textContent = "Signed in successfully. Standard account.";
       }
     }
@@ -522,6 +524,10 @@ result.textContent = "Signed in successfully. Standard account.";
 
 loadSavedBusinesses();
 </script>
+<section id="adminDashboard" hidden>
+  <h2>VENTORA Admin Dashboard</h2>
+  
+</section>
 
 </body>
 </html>
