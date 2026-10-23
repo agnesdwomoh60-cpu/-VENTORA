@@ -472,6 +472,21 @@ document.getElementById("signInAccount").addEventListener("click", async functio
   result.textContent = error
     ? error.message
     : "Signed in successfully.";
+  if (!error) {
+    const { data: { user } } = await ventoraSupabase.auth.getUser();
+    const { data: adminRecord, error: adminError } = await ventoraSupabase.from("ventora_admins").select("user_id").eq("user_id", user.id).maybeSingle();
+    if (adminError) {
+      result.textContent = "Signed in, but administrator check failed.";
+      result.textContent += " Please try again later.";
+      }
+    else if (adminRecord) {
+result.textContent = "Signed in successfully. Administrator access confirmed.";
+   }
+    else {
+result.textContent = "Signed in successfully. Standard account.";
+      }
+    }
+  
 });
 
   async function loadSavedBusinesses() {
