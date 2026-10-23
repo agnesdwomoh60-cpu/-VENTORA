@@ -454,7 +454,23 @@ const { error } = await ventoraSupabase.auth.signUp({
     : "Registration submitted. Check your email if confirmation is required.";
 });
 
-document.getElementById("signInAccount").addEventListener("click", async function () {
+
+async function loadAdminBusinessListings() {
+  const box = document.getElementById("adminBusinessListings");
+  box.textContent = "Loading business listings...";
+  const { data, error } = await ventoraSupabase.from("ventora_business_listings").select("business_name, description").order("created_at", { ascending: false });
+  if (error) {
+    box.textContent = "Could not load business listings.";
+return;
+    }
+if (!data || data.length === 0) {
+box.textContent = "No business listings found.";
+return;
+  }
+box.innerText = data.map((item, index) => (index + 1) + ". " + (item.business_name || "Unnamed business") + " — " + (item.description || "No description")).join("\n\n");
+  }
+  
+  document.getElementById("signInAccount").addEventListener("click", async function () {
   const email = document.getElementById("accountEmail").value.trim();
   const password = document.getElementById("accountPassword").value;
   const result = document.getElementById("accountResult");
@@ -481,6 +497,8 @@ document.getElementById("signInAccount").addEventListener("click", async functio
       }
     else if (adminRecord) {
 document.getElementById("adminDashboard").hidden = false;
+      loadAdminBusinessListings();
+      
       result.textContent = "Signed in successfully. Administrator access confirmed.";
    }
     else {
@@ -526,6 +544,8 @@ loadSavedBusinesses();
 </script>
 <section id="adminDashboard" hidden>
   <h2>VENTORA Admin Dashboard</h2>
+  <h3>Manage Business Listings</h3>
+  <div id="adminBusinessListings">Loading business listings...</div>
   
 </section>
 
