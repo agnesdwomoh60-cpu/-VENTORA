@@ -397,6 +397,27 @@ if (saveError) {
 </section>
   </section>
 
+<section id="accountSection" style="padding:20px;border:1px solid #ddd;border-radius:10px;margin:20px 0;">
+  <h2>VENTORA Account</h2>
+  <p>Create an account or sign in to continue.</p>
+
+  <p>
+    <label for="accountEmail">Email address</label><br>
+    <input type="email" id="accountEmail" required
+      style="width:100%;padding:12px;box-sizing:border-box;">
+  </p>
+
+  <p>
+    <label for="accountPassword">Password</label><br>
+    <input type="password" id="accountPassword" required
+      style="width:100%;padding:12px;box-sizing:border-box;">
+  </p>
+
+  <button type="button" id="registerAccount">Create Account</button>
+  <button type="button" id="signInAccount">Sign In</button>
+  <p id="accountResult"></p>
+</section>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 const SUPABASE_URL = "https://bzfaizfpnlqnpyopgggi.supabase.co";
@@ -406,6 +427,47 @@ const ventoraSupabase = window.supabase.createClient(
   SUPABASE_URL,
   SUPABASE_KEY
 );
+  
+document.getElementById("registerAccount").addEventListener("click", async function () {
+  const email = document.getElementById("accountEmail").value.trim();
+  const password = document.getElementById("accountPassword").value;
+  const result = document.getElementById("accountResult");
+
+  if (!email || !password) {
+    result.textContent = "Enter your email and password.";
+    return;
+  }
+
+  const { error } = await ventoraSupabase.auth.signUp({
+    email: email,
+    password: password
+  });
+
+  result.textContent = error
+    ? error.message
+    : "Registration submitted. Check your email if confirmation is required.";
+});
+
+document.getElementById("signInAccount").addEventListener("click", async function () {
+  const email = document.getElementById("accountEmail").value.trim();
+  const password = document.getElementById("accountPassword").value;
+  const result = document.getElementById("accountResult");
+
+  if (!email || !password) {
+    result.textContent = "Enter your email and password.";
+    return;
+  }
+
+  const { error } = await ventoraSupabase.auth.signInWithPassword({
+    email: email,
+    password: password
+  });
+
+  result.textContent = error
+    ? error.message
+    : "Signed in successfully.";
+});
+
   async function loadSavedBusinesses() {
   const list = document.getElementById("savedBusinessListings");
 
