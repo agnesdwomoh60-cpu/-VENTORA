@@ -458,7 +458,9 @@ const { error } = await ventoraSupabase.auth.signUp({
 async function loadAdminBusinessListings() {
   const box = document.getElementById("adminBusinessListings");
   box.textContent = "Loading business listings...";
-  const { data, error } = await ventoraSupabase.from("ventora_business_listings").select("business_name, description").order("created_at", { ascending: false });
+  
+const { data, error } = await ventoraSupabase.from("ventora_business_listings").select("id, business_name, description").order("created_at", { ascending: false });
+
   if (error) {
     box.textContent = "Could not load business listings.";
 return;
@@ -467,7 +469,30 @@ if (!data || data.length === 0) {
 box.textContent = "No business listings found.";
 return;
   }
-box.innerText = data.map((item, index) => (index + 1) + ". " + (item.business_name || "Unnamed business") + " — " + (item.description || "No description")).join("\n\n");
+  
+box.innerHTML = "";
+data.forEach((item, index) => {
+  const row = document.createElement("div");
+  const details = document.createElement("span");
+  details.textContent = (index + 1) + ". " + (item.business_name || "Unnamed business") + " — " + (item.description || "No description") + " ";
+  const button = document.createElement("button");
+  button.type = "button";
+  button.textContent = "Delete";
+  button.addEventListener("click", async () => {
+    if (!confirm("Are you sure you want to delete this business listing?")) return;
+    const { error } = await ventoraSupabase.from("ventora_business_listings").delete().eq("id", item.id);
+    if (error) {
+      alert("Could not delete listing: " + error.message);
+      return;
+    }
+    alert("Business listing deleted.");
+    loadAdminBusinessListings();
+  });
+  row.appendChild(details);
+  row.appendChild(button);
+  box.appendChild(row);
+});
+
   }
   
   document.getElementById("signInAccount").addEventListener("click", async function () {
