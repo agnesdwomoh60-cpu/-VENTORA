@@ -1,6 +1,7 @@
 
 
 
+
 <!DOCTYPE html>
 
 <html lang="en">
@@ -375,9 +376,10 @@ async function loadFashionProducts() {
 
     title.textContent = item.product_name || "Unnamed product";
     details.textContent =
-      (item.category || "Fashion") + " — " +
-      (item.description || "No description") + " — " +
-      (item.price !== null ? item.currency + " " + item.price : "Price not listed");
+  (item.category || "Fashion") + " — " +
+  (item.description || "No description") + " — " +
+  (item.price !== null ? item.currency + " " + item.price : "Price not listed") +
+  " — Contact: " + (item.contact || "Contact not provided");
 
     card.appendChild(title);
     card.appendChild(details);
