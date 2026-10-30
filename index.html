@@ -347,7 +347,124 @@ if (saveError) {
     "<p><strong>Skills and experience:</strong> "+safe(document.getElementById("jobSkills").value)+"</p>";
 
 });
+async function loadFashionProducts() {
+  const box = document.getElementById("fashionProductList");
+  box.textContent = "Loading products...";
 
+  const { data, error } = await ventoraSupabase
+    .from("fashion_listings")
+    .select("*")
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    box.textContent = "Could not load fashion products: " + error.message;
+    return;
+  }
+
+  if (!data || data.length === 0) {
+    box.textContent = "No fashion products listed yet.";
+    return;
+  }
+
+  box.innerHTML = "";
+
+  for (const item of data) {
+    const card = document.createElement("div");
+    const title = document.createElement("h4");
+    const details = document.createElement("p");
+
+    title.textContent = item.product_name || "Unnamed product";
+    details.textContent =
+      (item.category || "Fashion") + " — " +
+      (item.description || "No description") + " — " +
+      (item.price !== null ? item.currency + " " + item.price : "Price not listed");
+
+    card.appendChild(title);
+    card.appendChild(details);
+
+    if (item.image_path) {
+      const { data: imageData, error: imageError } =
+        await ventoraSupabase.storage
+          .from("ventora-fashion")
+          .createSignedUrl(item.image_path, 3600);
+
+      if (!imageError && imageData) {
+        const photo = document.createElement("img");
+        photo.src = imageData.signedUrl;
+        photo.alt = item.product_name || "Fashion product";
+        photo.style.maxWidth = "220px";
+        photo.style.height = "auto";
+        card.appendChild(photo);
+      }
+    }
+
+    box.appendChild(card);
+  }
+}
+document.addEventListener("DOMContentLoaded", function () {
+document.getElementById("fashionForm").addEventListener("submit", async function(event) {
+  event.preventDefault();
+
+  const message = document.getElementById("fashionMessage");
+  const image = document.getElementById("fashionImage").files[0];
+
+  if (!image) {
+    message.textContent = "Please select a product photo.";
+    return;
+  }
+
+  if (image.size > 5 * 1024 * 1024) {
+    message.textContent = "The photo must not exceed 5 MB.";
+    return;
+  }
+
+  if (!["image/jpeg", "image/png", "image/webp"].includes(image.type)) {
+    message.textContent = "Please upload a JPG, PNG, or WebP photo.";
+    return;
+  }
+
+  message.textContent = "Uploading product...";
+
+  const imagePath = Date.now() + "-" +
+    Math.random().toString(36).slice(2) + "-" + image.name;
+
+  const { error: uploadError } = await ventoraSupabase.storage
+    .from("ventora-fashion")
+    .upload(imagePath, image);
+
+  if (uploadError) {
+    message.textContent = "Photo upload failed: " + uploadError.message;
+    return;
+  }
+
+  const priceValue = document.getElementById("fashionPrice").value;
+
+  const { error: insertError } = await ventoraSupabase
+    .from("fashion_listings")
+    .insert({
+      seller_name: document.getElementById("fashionSeller").value.trim(),
+      product_name: document.getElementById("fashionProduct").value.trim(),
+      category: document.getElementById("fashionCategory").value.trim(),
+      description: document.getElementById("fashionDescription").value.trim(),
+      price: priceValue === "" ? null : Number(priceValue),
+      currency: "GHS",
+      image_path: imagePath,
+      contact: document.getElementById("fashionContact").value.trim()
+    });
+
+  if (insertError) {
+    message.textContent = "Product details could not be saved: " + insertError.message;
+    return;
+  }
+
+  message.textContent = "Product submitted successfully!";
+  document.getElementById("fashionForm").reset();
+  await loadFashionProducts();
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+  loadFashionProducts();
+});
 </script>
 
 
@@ -392,7 +509,42 @@ if (saveError) {
 
   </div>
 
-  <p><small>This is a starter section. Fashion listings are not yet connected to a public database.</small></p>
+  <div id="fashion-marketplace">
+  <h2>African Fashion Marketplace</h2>
+  <p>Discover and showcase African fashion products.</p>
+
+  <h3>List Your Product</h3>
+
+  <form id="fashionForm">
+    <label>Seller Name</label>
+    <input type="text" id="fashionSeller" required>
+
+    <label>Product Name</label>
+    <input type="text" id="fashionProduct" required>
+
+    <label>Category</label>
+    <input type="text" id="fashionCategory" placeholder="Clothing, shoes, bags, accessories">
+
+    <label>Description</label>
+    <textarea id="fashionDescription"></textarea>
+
+    <label>Price (GHS)</label>
+    <input type="number" id="fashionPrice" min="0" step="0.01">
+
+    <label>Contact</label>
+    <input type="text" id="fashionContact">
+
+    <label>Product Photo</label>
+    <input type="file" id="fashionImage" accept="image/jpeg,image/png,image/webp" required>
+
+    <button type="submit">Submit Product</button>
+  </form>
+
+  <p id="fashionMessage"></p>
+
+  <h3>Available Products</h3>
+  <div id="fashionProductList">Loading products...</div>
+</div>
 
 </section>
   </section>
