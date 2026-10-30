@@ -494,7 +494,61 @@ data.forEach((item, index) => {
 });
 
   }
-  
+ async function loadAdminCVs() {
+  const box = document.getElementById("admin-cv-list");
+  box.textContent = "Loading submitted CVs...";
+
+  const { data, error } = await ventoraSupabase
+    .from("ventora_job_profiles")
+    .select("full_name, desired_job, email, skills_experience, cv_path")
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    box.textContent = "Could not load submitted CVs: " + error.message;
+    return;
+  }
+
+  if (!data || data.length === 0) {
+    box.textContent = "No CV submissions found.";
+    return;
+  }
+
+  box.innerHTML = "<h3>Submitted CVs</h3>";
+
+  for (const item of data) {
+    const row = document.createElement("div");
+    const details = document.createElement("p");
+
+    details.textContent =
+      (item.full_name || "Unnamed applicant") +
+      " — " + (item.desired_job || "No job specified") +
+      " — " + (item.email || "No email");
+
+    row.appendChild(details);
+
+    if (item.cv_path) {
+      const { data: fileData, error: fileError } =
+        await ventoraSupabase.storage
+          .from("ventora-cvs")
+          .createSignedUrl(item.cv_path, 300);
+
+      if (!fileError && fileData) {
+        const link = document.createElement("a");
+        link.href = fileData.signedUrl;
+        link.textContent = "View / Download CV";
+        link.target = "_blank";
+        link.rel = "noopener noreferrer";
+        row.appendChild(link);
+      } else {
+        const message = document.createElement("p");
+        message.textContent = "CV link could not be created.";
+        row.appendChild(message);
+      }
+    }
+
+    box.appendChild(row);
+  }
+} 
   document.getElementById("signInAccount").addEventListener("click", async function () {
   const email = document.getElementById("accountEmail").value.trim();
   const password = document.getElementById("accountPassword").value;
@@ -569,6 +623,10 @@ loadSavedBusinesses();
 </script>
 <section id="adminDashboard" hidden>
   <h2>VENTORA Admin Dashboard</h2>
+  <div id="admin-cv-list">
+  <h3>Submitted CVs</h3>
+  <p>Loading submitted CVs...</p>
+</div>
   <h3>Manage Business Listings</h3>
   <div id="adminBusinessListings">Loading business listings...</div>
   <button type="button" onclick="loadAdminBusinessListings()">Refresh Listings</button>
