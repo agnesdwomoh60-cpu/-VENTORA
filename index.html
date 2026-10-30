@@ -610,97 +610,60 @@ const { error } = await ventoraSupabase.auth.signUp({
 async function loadAdminBusinessListings() {
   const box = document.getElementById("adminBusinessListings");
   box.textContent = "Loading business listings...";
-  
-const { data, error } = await ventoraSupabase.from("ventora_business_listings").select("id, business_name, description").order("created_at", { ascending: false });
-
-  if (error) {
-    box.textContent = "Could not load business listings.";
-return;
-    }
-if (!data || data.length === 0) {
-box.textContent = "No business listings found.";
-return;
-  }
-  
-box.innerHTML = "";
-data.forEach((item, index) => {
-  const row = document.createElement("div");
-  const details = document.createElement("span");
-  details.textContent = (index + 1) + ". " + (item.business_name || "Unnamed business") + " — " + (item.description || "No description") + " ";
-  const button = document.createElement("button");
-  button.type = "button";
-  button.textContent = "Delete";
-  button.addEventListener("click", async () => {
-    if (!confirm("Are you sure you want to delete this business listing?")) return;
-    const { error } = await ventoraSupabase.from("ventora_business_listings").delete().eq("id", item.id);
-    if (error) {
-      alert("Could not delete listing: " + error.message);
-      return;
-    }
-    alert("Business listing deleted.");
-    loadAdminBusinessListings();
-  });
-  row.appendChild(details);
-  row.appendChild(button);
-  box.appendChild(row);
-});
-
-  }
- async function loadAdminCVs() {
-  const box = document.getElementById("admin-cv-list");
-  box.textContent = "Loading submitted CVs...";
 
   const { data, error } = await ventoraSupabase
-    .from("ventora_job_profiles")
-    .select("full_name, desired_job, email, skills_experience, cv_path")
+    .from("ventora_business_listings")
+    .select("id, business_name, description")
     .order("created_at", { ascending: false });
 
   if (error) {
-    box.textContent = "Could not load submitted CVs: " + error.message;
+    box.textContent = "Could not load business listings: " + error.message;
     return;
   }
 
   if (!data || data.length === 0) {
-    box.textContent = "No CV submissions found.";
+    box.textContent = "No business listings found.";
     return;
   }
 
-  box.innerHTML = "<h3>Submitted CVs</h3>";
+  box.innerHTML = "";
 
-  for (const item of data) {
+  data.forEach((item, index) => {
     const row = document.createElement("div");
-    const details = document.createElement("p");
+    const details = document.createElement("span");
 
     details.textContent =
-      (item.full_name || "Unnamed applicant") +
-      " — " + (item.desired_job || "No job specified") +
-      " — " + (item.email || "No email");
+      (index + 1) + ". " +
+      (item.business_name || "Unnamed business") +
+      " — " + (item.description || "No description") + " ";
+
+    const button = document.createElement("button");
+    button.type = "button";
+    button.textContent = "Delete";
+
+    button.addEventListener("click", async () => {
+      if (!confirm("Are you sure you want to delete this business listing?")) return;
+
+      const { error } = await ventoraSupabase
+        .from("ventora_business_listings")
+        .delete()
+        .eq("id", item.id);
+
+      if (error) {
+        alert("Could not delete listing: " + error.message);
+        return;
+      }
+
+      alert("Business listing deleted.");
+      loadAdminBusinessListings();
+    });
 
     row.appendChild(details);
-
-    if (item.cv_path) {
-      const { data: fileData, error: fileError } =
-        await ventoraSupabase.storage
-          .from("ventora-cvs")
-          .createSignedUrl(item.cv_path, 300);
-
-      if (!fileError && fileData) {
-        const link = document.createElement("a");
-        link.href = fileData.signedUrl;
-        link.textContent = "View / Download CV";
-        link.target = "_blank";
-        link.rel = "noopener noreferrer";
-        row.appendChild(link);
-      } else {
-        const message = document.createElement("p");
-        message.textContent = "CV link could not be created.";
-        row.appendChild(message);
-      }
-    }
-
+    row.appendChild(button);
     box.appendChild(row);
-  }
-} 
+  });
+}
+
 async function loadAdminCVs() {
   const box = document.getElementById("admin-cv-list");
   box.textContent = "Loading submitted CVs...";
@@ -756,9 +719,60 @@ async function loadAdminCVs() {
     box.appendChild(row);
   }
 }
- box.appendChild(row);
+
+async function loadAdminFashionProducts() {
+  const box = document.getElementById("adminFashionListings");
+  box.textContent = "Loading fashion products...";
+
+  const { data, error } = await ventoraSupabase
+    .from("fashion_listings")
+    .select("*")
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    box.textContent = "Could not load fashion products: " + error.message;
+    return;
   }
-} 
+
+  if (!data || data.length === 0) {
+    box.textContent = "No fashion products submitted yet.";
+    return;
+  }
+
+  box.innerHTML = "";
+
+  for (const item of data) {
+    const row = document.createElement("div");
+    const details = document.createElement("p");
+
+    details.textContent =
+      (item.product_name || "Unnamed product") +
+      " — Seller: " + (item.seller_name || "Not provided") +
+      " — Contact: " + (item.contact || "Not provided") +
+      " — Price: " +
+      (item.price !== null ? "GHS " + item.price : "Not listed");
+
+    row.appendChild(details);
+
+    if (item.image_path) {
+      const { data: imageData, error: imageError } =
+        await ventoraSupabase.storage
+          .from("ventora-fashion")
+          .createSignedUrl(item.image_path, 300);
+
+      if (!imageError && imageData) {
+        const photo = document.createElement("img");
+        photo.src = imageData.signedUrl;
+        photo.alt = item.product_name || "Fashion product";
+        photo.style.maxWidth = "180px";
+        photo.style.height = "auto";
+        row.appendChild(photo);
+      }
+    }
+
+    box.appendChild(row);
+  }
+}
   document.getElementById("signInAccount").addEventListener("click", async function () {
   const email = document.getElementById("accountEmail").value.trim();
   const password = document.getElementById("accountPassword").value;
@@ -843,7 +857,7 @@ loadSavedBusinesses();
   <button type="button" onclick="loadAdminBusinessListings()">Refresh Listings</button>
   <h3>Manage Fashion Products</h3>
 <div id="adminFashionListings">Loading fashion products...</div>
-<button type="button" onclick="loadAdminFashionListings()">Refresh Fashion Products</button>
+<button type="button" onclick="loadAdminFashionProducts()">Refresh Fashion Products</button>
 </section>
 
 </body>
