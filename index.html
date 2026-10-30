@@ -755,6 +755,9 @@ async function loadAdminCVs() {
 
     box.appendChild(row);
   }
+}
+ box.appendChild(row);
+  }
 } 
   document.getElementById("signInAccount").addEventListener("click", async function () {
   const email = document.getElementById("accountEmail").value.trim();
@@ -785,6 +788,7 @@ async function loadAdminCVs() {
 document.getElementById("adminDashboard").hidden = false;
       loadAdminBusinessListings();
       loadAdminCVs();
+      loadAdminFashionProducts();
       result.textContent = "Signed in successfully. Administrator access confirmed.";
    }
     else {
@@ -837,6 +841,9 @@ loadSavedBusinesses();
   <h3>Manage Business Listings</h3>
   <div id="adminBusinessListings">Loading business listings...</div>
   <button type="button" onclick="loadAdminBusinessListings()">Refresh Listings</button>
+  <h3>Manage Fashion Products</h3>
+<div id="adminFashionListings">Loading fashion products...</div>
+<button type="button" onclick="loadAdminFashionListings()">Refresh Fashion Products</button>
 </section>
 
 </body>
