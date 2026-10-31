@@ -393,8 +393,9 @@ async function loadFashionProducts() {
 
     card.appendChild(title);
     card.appendChild(details);
-    if (item.contact) {
-      const whatsapp = document.createElement("a");
+
+if (item.contact) {
+    if     const whatsapp = document.createElement("a");
       const phone = item.contact.replace(/\D/g, "");
       const whatsappNumber = phone.startsWith("0")
         ? "233" + phone.slice(1)
