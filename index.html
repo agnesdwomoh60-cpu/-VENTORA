@@ -350,6 +350,11 @@ if (saveError) {
 });
 async function loadFashionProducts() {
   const box = document.getElementById("fashionProductList");
+  
+    box.style.display = "grid";
+  box.style.gridTemplateColumns = "repeat(auto-fit, minmax(250px, 1fr))";
+  box.style.gap = "20px";
+  
   box.textContent = "Loading products...";
 
   const { data, error } = await ventoraSupabase
