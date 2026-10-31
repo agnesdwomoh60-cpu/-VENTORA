@@ -158,7 +158,29 @@ footer a{color:#f2c45a}
 </div>
 
 </section>
+<section id="employer-registration" class="intro">
 
+  <h2>Employer Registration</h2>
+
+  <p>Register your company to connect with job seekers on VENTORA.</p>
+
+  <input type="text" id="employerCompany" placeholder="Company Name" required>
+
+  <input type="text" id="employerContact" placeholder="Contact Person" required>
+
+  <input type="email" id="employerEmail" placeholder="Company Email" required>
+
+  <input type="tel" id="employerPhone" placeholder="Phone Number" required>
+
+  <input type="url" id="employerWebsite" placeholder="Company Website (Optional)">
+
+  <textarea id="employerDescription" placeholder="Describe your business"></textarea>
+
+  <button type="button" id="registerEmployer">Submit Registration</button>
+
+  <p id="employerResult"></p>
+
+</section>
 <section id="contact" class="intro">
 
 <h2>Be Part of VENTORA</h2>
@@ -248,7 +270,46 @@ function escapeText(value){
   });
 
 }
+document.getElementById("registerEmployer").addEventListener("click", async function () {
+  const result = document.getElementById("employerResult");
 
+  const { data: { user }, error: userError } =
+    await ventoraSupabase.auth.getUser();
+
+  if (userError || !user) {
+    result.textContent = "Please create an account or sign in before registering your company.";
+    return;
+  }
+
+  const companyName = document.getElementById("employerCompany").value.trim();
+  const contactName = document.getElementById("employerContact").value.trim();
+  const email = document.getElementById("employerEmail").value.trim();
+  const phone = document.getElementById("employerPhone").value.trim();
+
+  if (!companyName || !contactName || !email || !phone) {
+    result.textContent = "Please complete all required fields.";
+    return;
+  }
+
+  const { error } = await ventoraSupabase
+    .from("ventora_employers")
+    .insert({
+      user_id: user.id,
+      company_name: companyName,
+      contact_name: contactName,
+      email: email,
+      phone: phone,
+      website: document.getElementById("employerWebsite").value.trim(),
+      business_description: document.getElementById("employerDescription").value.trim()
+    });
+
+  if (error) {
+    result.textContent = "Registration failed: " + error.message;
+    return;
+  }
+
+  result.textContent = "Registration submitted successfully. Your approval status is pending.";
+});
 </script>
 
 
