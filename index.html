@@ -373,7 +373,12 @@ async function loadFashionProducts() {
     const card = document.createElement("div");
     const title = document.createElement("h4");
     const details = document.createElement("p");
-
+    card.style.border = "1px solid #ddd";
+    card.style.borderRadius = "12px";
+    card.style.padding = "15px";
+    card.style.marginBottom = "20px";
+    card.style.maxWidth = "320px";
+    card.style.backgroundColor = "#fff";
     title.textContent = item.product_name || "Unnamed product";
     details.textContent =
   (item.category || "Fashion") + " — " +
