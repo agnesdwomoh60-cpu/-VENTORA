@@ -259,11 +259,17 @@ function escapeText(value){
     <p><input id="jobEmail" type="email" placeholder="Your email address" required style="width:100%;padding:12px;box-sizing:border-box;"></p>
 
     <p><textarea id="jobSkills" placeholder="Your skills and experience" required style="width:100%;padding:12px;box-sizing:border-box;"></textarea></p>
-<p><label for="cvFile">Upload your CV (PDF, DOC, or DOCX):</label><br><input type="file" id="cvFile" accept=".pdf,.doc,.docx" required style="width:100%;padding:12px;box-sizing:border-box;"></p>
+<p>
+  <label>
+    <input type="checkbox" id="employerConsent">
+    I agree to share my profile and CV with registered employers on VENTORA.
+  </label>
+</p>
+    <p><label for="cvFile">Upload your CV (PDF, DOC, or DOCX):</label><br><input type="file" id="cvFile" accept=".pdf,.doc,.docx" required style="width:100%;padding:12px;box-sizing:border-box;"></p>
   <p id="cvPreview"></p>
     <button type="submit" style="padding:12px 20px;background:#185237;color:white;border:0;border-radius:6px;">Preview My Profile</button>
 
-  </form>
+  <form>/
 
   <div id="jobResult" style="margin-top:20px;"></div>
 
@@ -327,7 +333,8 @@ if (uploadError) {
     desired_job: document.getElementById("jobTitle").value.trim(),
     email: document.getElementById("jobEmail").value.trim(),
   skills_experience: document.getElementById("jobSkills").value.trim(),
-cv_path: cvPath
+employer_consent: document.getElementById("employerConsent").checked,
+    cv_path: cvPath
   });
 
 if (saveError) {
