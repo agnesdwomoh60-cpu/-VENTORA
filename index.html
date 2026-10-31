@@ -710,7 +710,8 @@ async function loadAdminCVs() {
 
   const { data, error } = await ventoraSupabase
     .from("ventora_job_profiles")
-    .select("full_name, desired_job, email, skills_experience, cv_path")
+    .select("full_name, desired_job, email, skills_experience, cv_path, employer_consent")
+.eq("employer_consent", true)
     .order("created_at", { ascending: false });
 
   if (error) {
