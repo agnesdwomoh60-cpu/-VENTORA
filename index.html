@@ -395,7 +395,7 @@ async function loadFashionProducts() {
     card.appendChild(details);
 
 if (item.contact) {
-    if     const whatsapp = document.createElement("a");
+    const whatsapp = document.createElement("a");
       const phone = item.contact.replace(/\D/g, "");
       const whatsappNumber = phone.startsWith("0")
         ? "233" + phone.slice(1)
@@ -882,7 +882,7 @@ result.textContent = "Signed in successfully. Standard account.";
       "</p>" +
       (whatsappNumber
         ? "<a href='https://wa.me/" + whatsappNumber +
-          '" target='_blank' rel='noopener noreferrer'>Contact on WhatsApp</a>"
+          '" target="_blank" rel="noopener noreferrer">Contact on WhatsApp</a>"
         : "") +
       "</div>"
     );
