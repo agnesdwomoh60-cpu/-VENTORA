@@ -378,12 +378,24 @@ async function loadFashionProducts() {
     details.textContent =
   (item.category || "Fashion") + " — " +
   (item.description || "No description") + " — " +
-  (item.price !== null ? item.currency + " " + item.price : "Price not listed") +
-  " — Contact: " + (item.contact || "Contact not provided");
+    (item.price !== null ? item.currency + " " + item.price : "Price not listed");
+  
 
     card.appendChild(title);
     card.appendChild(details);
+    if (item.contact) {
+      const whatsapp = document.createElement("a");
+      const phone = item.contact.replace(/\D/g, "");
+      const whatsappNumber = phone.startsWith("0")
+        ? "233" + phone.slice(1)
+        : phone;
 
+      whatsapp.href = "https://wa.me/" + whatsappNumber;
+      whatsapp.textContent = "Contact seller on WhatsApp";
+      whatsapp.target = "_blank";
+      whatsapp.rel = "noopener noreferrer";
+      card.appendChild(whatsapp);
+    }
     if (item.image_path) {
       const { data: imageData, error: imageError } =
         await ventoraSupabase.storage
