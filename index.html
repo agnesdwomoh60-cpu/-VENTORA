@@ -398,8 +398,8 @@ async function loadFashionProducts() {
       whatsapp.href = "https://wa.me/" + whatsappNumber;
       whatsapp.textContent = "Contact seller on WhatsApp";
       whatsapp.style.display = "inline-block";
-whatsapp.style.backgroundColor = "#25D366";
-whatsapp.style.color = "#fff";
+whatsapp.style.setProperty("background-color", "#25D366", "important");
+whatsapp.style.setProperty("color", "#ffffff", "important");
 whatsapp.style.padding = "10px 15px";
 whatsapp.style.borderRadius = "8px";
 whatsapp.style.textDecoration = "none";
