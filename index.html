@@ -645,7 +645,7 @@ async function loadAdminBusinessListings() {
 
   const { data, error } = await ventoraSupabase
     .from("ventora_business_listings")
-    .select("id, business_name, description")
+    .select("id, business_name, description, phone")
     .order("created_at", { ascending: false });
 
   if (error) {
@@ -865,15 +865,27 @@ result.textContent = "Signed in successfully. Standard account.";
     return;
   }
 
-  list.innerHTML = data.map(business =>
-    "<div class='card'><h3>" +
-    escapeText(business.business_name || "") +
-    "</h3><p>" +
-    escapeText(business.description || "") +
-    "</p><p>" +
-    escapeText(business.phone || "") +
-    "</p></div>"
-  ).join("");
+    list.innerHTML = data.map(business => {
+    const phone = (business.phone || "").replace(/\D/g, "");
+    const whatsappNumber = phone.startsWith("0")
+      ? "233" + phone.slice(1)
+      : phone;
+
+    return (
+      "<div class='card'><h3>" +
+      escapeText(business.business_name || "") +
+      "</h3><p>" +
+      escapeText(business.description || "") +
+      "</p><p>" +
+      escapeText(business.phone || "") +
+      "</p>" +
+      (whatsappNumber
+        ? "<a href='https://wa.me/" + whatsappNumber +
+          "' target='_blank' rel='noopener noreferrer'>Contact on WhatsApp</a>"
+        : "") +
+      "</div>"
+    );
+  }).join("");
 }
 
 loadSavedBusinesses();
