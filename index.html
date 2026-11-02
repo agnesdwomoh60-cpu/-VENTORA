@@ -889,6 +889,59 @@ async function loadAdminEmployers() {
     box.appendChild(row);
   }
 }
+async function loadEmployerJobProfiles() {
+  const box = document.getElementById("employer-job-profiles");
+  box.textContent = "Loading job seeker profiles...";
+
+  const { data, error } = await ventoraSupabase
+    .from("ventora_job_profiles")
+    .select("full_name, desired_job, email, skills_experience, cv_path")
+    .eq("employer_consent", true)
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    box.textContent = "Could not load job seeker profiles: " + error.message;
+    return;
+  }
+
+  if (!data || data.length === 0) {
+    box.textContent = "No profiles have been shared with employers yet.";
+    return;
+  }
+
+  box.innerHTML = "";
+
+  for (const item of data) {
+    const row = document.createElement("div");
+    const details = document.createElement("p");
+
+    details.textContent =
+      (item.full_name || "Unnamed applicant") +
+      " — " + (item.desired_job || "No job specified") +
+      " — " + (item.email || "No email") +
+      " — " + (item.skills_experience || "No skills listed");
+
+    row.appendChild(details);
+
+    if (item.cv_path) {
+      const { data: fileData, error: fileError } =
+        await ventoraSupabase.storage
+          .from("ventora-cvs")
+          .createSignedUrl(item.cv_path, 300);
+
+      if (!fileError && fileData) {
+        const link = document.createElement("a");
+        link.href = fileData.signedUrl;
+        link.textContent = "View / Download CV";
+        link.target = "_blank";
+        link.rel = "noopener noreferrer";
+        row.appendChild(link);
+      }
+    }
+
+    box.appendChild(row);
+  }
+}  
 async function loadAdminFashionProducts() {
   const box = document.getElementById("adminFashionListings");
   box.textContent = "Loading fashion products...";
@@ -976,9 +1029,31 @@ document.getElementById("adminDashboard").hidden = false;
       result.textContent = "Signed in successfully. Administrator access confirmed.";
    }
     else {
-      document.getElementById("adminDashboard").hidden = true;
-result.textContent = "Signed in successfully. Standard account.";
-      }
+  document.getElementById("adminDashboard").hidden = true;
+
+  const { data: employerRecord, error: employerError } =
+    await ventoraSupabase
+      .from("ventora_employers")
+      .select("user_id")
+      .eq("user_id", user.id)
+      .eq("approval_status", "approved")
+      .maybeSingle();
+
+  if (employerError) {
+    result.textContent = "Employer check failed: " + employerError.message;
+    return;
+  }
+
+  if (employerRecord) {
+    document.getElementById("employerDashboard").hidden = false;
+    loadEmployerJobProfiles();
+    result.textContent = "Signed in successfully. Employer access confirmed.";
+  } else {
+    document.getElementById("employerDashboard").hidden = true;
+    result.textContent = "Signed in successfully. Standard account.";
+  }
+}
+      
     }
   
 });
