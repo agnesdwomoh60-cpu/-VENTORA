@@ -830,7 +830,65 @@ async function loadAdminCVs() {
     box.appendChild(row);
   }
 }
+async function loadAdminEmployers() {
+  const box = document.getElementById("admin-employer-list");
+  box.textContent = "Loading employer registrations...";
 
+  const { data, error } = await ventoraSupabase
+    .from("ventora_employers")
+    .select("*")
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    box.textContent = "Could not load employers: " + error.message;
+    return;
+  }
+
+  box.innerHTML = "<h3>Employer Registrations</h3>";
+
+  if (!data || data.length === 0) {
+    box.textContent = "No employer registrations found.";
+    return;
+  }
+
+  for (const item of data) {
+    const row = document.createElement("div");
+    const details = document.createElement("p");
+
+    details.textContent =
+      (item.company_name || "Unnamed company") +
+      " — " + (item.contact_name || "No contact") +
+      " — " + (item.email || "No email") +
+      " — Status: " + (item.approval_status || "pending");
+
+    row.appendChild(details);
+
+    if (item.approval_status === "pending") {
+      for (const status of ["approved", "rejected"]) {
+        const button = document.createElement("button");
+        button.textContent = status === "approved" ? "Approve" : "Reject";
+
+        button.addEventListener("click", async () => {
+          const { error } = await ventoraSupabase
+            .from("ventora_employers")
+            .update({ approval_status: status })
+            .eq("id", item.id);
+
+          if (error) {
+            alert("Update failed: " + error.message);
+            return;
+          }
+
+          loadAdminEmployers();
+        });
+
+        row.appendChild(button);
+      }
+    }
+
+    box.appendChild(row);
+  }
+}
 async function loadAdminFashionProducts() {
   const box = document.getElementById("adminFashionListings");
   box.textContent = "Loading fashion products...";
@@ -913,6 +971,7 @@ async function loadAdminFashionProducts() {
 document.getElementById("adminDashboard").hidden = false;
       loadAdminBusinessListings();
       loadAdminCVs();
+      loadAdminEmployers();
       loadAdminFashionProducts();
       result.textContent = "Signed in successfully. Administrator access confirmed.";
    }
@@ -974,6 +1033,10 @@ loadSavedBusinesses();
   <div id="admin-cv-list">
   <h3>Submitted CVs</h3>
   <p>Loading submitted CVs...</p>
+</div>
+  <div id="admin-employer-list">
+  <h3>Employer Registrations</h3>
+  <p>Loading employer registrations...</p>
 </div>
   <h3>Manage Business Listings</h3>
   <div id="adminBusinessListings">Loading business listings...</div>
