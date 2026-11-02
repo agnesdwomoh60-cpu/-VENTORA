@@ -325,17 +325,8 @@ document.getElementById("signOutButton").addEventListener("click", async functio
   document.getElementById("accountResult").textContent = "You have signed out successfully.";
 });
 
-async function checkLoginSession() {
-  const { data: { session } } = await ventoraSupabase.auth.getSession();
 
-  document.getElementById("signOutButton").hidden = !session;
-}
 
-checkLoginSession();
-
-ventoraSupabase.auth.onAuthStateChange((event, session) => {
-  document.getElementById("signOutButton").hidden = !session;
-});
 </script>
   
   
@@ -718,7 +709,17 @@ const ventoraSupabase = window.supabase.createClient(
   SUPABASE_URL,
   SUPABASE_KEY
 );
-  
+async function checkLoginSession() {
+  const { data: { session } } = await ventoraSupabase.auth.getSession();
+
+  document.getElementById("signOutButton").hidden = !session;
+}
+
+checkLoginSession();
+
+ventoraSupabase.auth.onAuthStateChange((event, session) => {
+  document.getElementById("signOutButton").hidden = !session;
+});  
 document.getElementById("registerAccount").addEventListener("click", async function () {
   const email = document.getElementById("accountEmail").value.trim();
   const password = document.getElementById("accountPassword").value;
