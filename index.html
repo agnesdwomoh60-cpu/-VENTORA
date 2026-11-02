@@ -310,6 +310,24 @@ document.getElementById("registerEmployer").addEventListener("click", async func
 
   result.textContent = "Registration submitted successfully. Your approval status is pending.";
 });
+document.getElementById("signOutButton").addEventListener("click", async function () {
+  const { error } = await ventoraSupabase.auth.signOut();
+
+  if (error) {
+    alert("Sign out failed: " + error.message);
+    return;
+  }
+
+  document.getElementById("adminDashboard").hidden = true;
+  document.getElementById("employerDashboard").hidden = true;
+  document.getElementById("signOutButton").hidden = true;
+
+  document.getElementById("accountResult").textContent = "You have signed out successfully.";
+});
+
+ventoraSupabase.auth.onAuthStateChange((event, session) => {
+  document.getElementById("signOutButton").hidden = !session;
+});  
 </script>
 
 
