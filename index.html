@@ -1253,7 +1253,8 @@ document.getElementById("adminDashboard").hidden = false;
       .select("user_id")
       .eq("user_id", user.id)
       .eq("approval_status", "approved")
-      .maybeSingle();
+      .limit(1)
+    .maybeSingle();
 
   if (employerError) {
     result.textContent = "Employer check failed: " + employerError.message;
