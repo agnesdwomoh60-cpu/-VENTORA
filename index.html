@@ -342,24 +342,69 @@ document.getElementById("signOutButton").addEventListener("click", async functio
 
   <form id="jobForm">
 
-    <p><input id="jobName" placeholder="Your full name" required style="width:100%;padding:12px;box-sizing:border-box;"></p>
+  <p>
+    <input id="jobName" type="text" placeholder="Your full name"
+      required style="width:100%;padding:12px;box-sizing:border-box;">
+  </p>
 
-    <p><input id="jobTitle" placeholder="Job you are looking for" required style="width:100%;padding:12px;box-sizing:border-box;"></p>
+  <p>
+    <input id="jobPhone" type="tel" placeholder="Your phone number"
+      required style="width:100%;padding:12px;box-sizing:border-box;">
+  </p>
 
-    <p><input id="jobEmail" type="email" placeholder="Your email address" required style="width:100%;padding:12px;box-sizing:border-box;"></p>
+  <p>
+    <input id="jobTitle" type="text" placeholder="Job you are looking for"
+      required style="width:100%;padding:12px;box-sizing:border-box;">
+  </p>
 
-    <p><textarea id="jobSkills" placeholder="Your skills and experience" required style="width:100%;padding:12px;box-sizing:border-box;"></textarea></p>
-<p>
-  <label>
-    <input type="checkbox" id="employerConsent">
-    I agree to share my profile and CV with registered employers on VENTORA.
-  </label>
-</p>
-    <p><label for="cvFile">Upload your CV (PDF, DOC, or DOCX):</label><br><input type="file" id="cvFile" accept=".pdf,.doc,.docx" required style="width:100%;padding:12px;box-sizing:border-box;"></p>
+  <p>
+    <input id="jobEmail" type="email" placeholder="Your email address"
+      required style="width:100%;padding:12px;box-sizing:border-box;">
+  </p>
+
+  <p>
+    <textarea id="jobSkills" placeholder="Your skills"
+      required style="width:100%;padding:12px;box-sizing:border-box;"></textarea>
+  </p>
+
+  <p>
+    <textarea id="jobExperience" placeholder="Your work experience"
+      required style="width:100%;padding:12px;box-sizing:border-box;"></textarea>
+  </p>
+
+  <p>
+    <select id="jobExperienceStatus" required
+      style="width:100%;padding:12px;box-sizing:border-box;">
+      <option value="">Select your experience status</option>
+      <option value="Experienced">Experienced</option>
+      <option value="Entry-level">Entry-level</option>
+      <option value="No formal work experience">No formal work experience</option>
+    </select>
+  </p>
+
+  <p>
+    <label for="cvFile">Upload your CV (PDF, DOC, or DOCX):</label><br>
+    <input type="file" id="cvFile" accept=".pdf,.doc,.docx" required
+      style="width:100%;padding:12px;box-sizing:border-box;">
+  </p>
+
   <p id="cvPreview"></p>
-    <button type="submit" style="padding:12px 20px;background:#185237;color:white;border:0;border-radius:6px;">Preview My Profile</button>
 
-  <form>/
+  <p>
+    <label>
+      <input type="checkbox" id="employerConsent" required>
+      I agree to share my profile and CV with registered employers on VENTORA.
+    </label>
+  </p>
+
+  <button type="submit"
+    style="padding:12px 20px;background:#185237;color:white;border:0;border-radius:6px;">
+    Submit
+  </button>
+
+  
+
+</form>
 
   <div id="jobResult" style="margin-top:20px;"></div>
 
@@ -382,68 +427,89 @@ document.getElementById("cvFile").addEventListener("change", function () {
   preview.innerHTML = '<a href="' + url + '" target="_blank" rel="noopener">Open selected CV</a>';
 });
 
-document.getElementById("jobForm").addEventListener("submit",async function(event){
-
+document.getElementById("jobForm").addEventListener("submit", async function(event) {
   event.preventDefault();
 
-  function safe(value){
+  const result = document.getElementById("jobResult");
 
-    return value.replace(/[&<>"']/g,function(char){
+  function safe(value) {
+    return String(value).replace(/[&<>"']/g, function(char) {
+      return {
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+      }[char];
+    });
+  }
 
-      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[char];
+  const fullName = document.getElementById("jobName").value.trim();
+  const phone = document.getElementById("jobPhone").value.trim();
+  const desiredJob = document.getElementById("jobTitle").value.trim();
+  const email = document.getElementById("jobEmail").value.trim();
+  const skills = document.getElementById("jobSkills").value.trim();
+  const workExperience = document.getElementById("jobExperience").value.trim();
+  const experienceStatus = document.getElementById("jobExperienceStatus").value;
+  const consent = document.getElementById("employerConsent").checked;
+  const cvFile = document.getElementById("cvFile").files[0];
 
+  if (!cvFile) {
+    result.textContent = "Please select your CV file.";
+    return;
+  }
+
+  if (!consent) {
+    result.textContent = "Please agree to share your profile and CV.";
+    return;
+  }
+
+  result.textContent = "Uploading your CV and saving your profile...";
+
+  const cvPath = Date.now() + "-" +
+    cvFile.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+
+  const { error: uploadError } = await ventoraSupabase
+    .storage
+    .from("ventora-cvs")
+    .upload(cvPath, cvFile);
+
+  if (uploadError) {
+    result.textContent = "Unable to upload CV: " + uploadError.message;
+    return;
+  }
+
+  const { error: saveError } = await ventoraSupabase
+    .from("ventora_job_profiles")
+    .insert({
+      full_name: fullName,
+      phone_number: phone,
+      desired_job: desiredJob,
+      email: email,
+      skills: skills,
+      work_experience: workExperience,
+      experience_status: experienceStatus,
+      skills_experience: skills + " | " + workExperience,
+      employer_consent: consent,
+      cv_path: cvPath
     });
 
+  if (saveError) {
+    result.textContent = "Unable to save profile: " + saveError.message;
+    return;
   }
-const cvFile = document.getElementById("cvFile").files[0];
 
-if (!cvFile) {
-  document.getElementById("jobResult").textContent =
-    "Please select your CV file.";
-  return;
-}
-
-const cvPath = Date.now() + "-" +
-  cvFile.name.replace(/[^a-zA-Z0-9._-]/g, "_");
-
-const { error: uploadError } = await ventoraSupabase
-  .storage
-  .from("ventora-cvs")
-  .upload(cvPath, cvFile);
-
-if (uploadError) {
-  document.getElementById("jobResult").textContent =
-    "Unable to upload CV: " + uploadError.message;
-  return;
-}
-  const { error: saveError } = await ventoraSupabase
-  .from("ventora_job_profiles")
-  .insert({
-    full_name: document.getElementById("jobName").value.trim(),
-    desired_job: document.getElementById("jobTitle").value.trim(),
-    email: document.getElementById("jobEmail").value.trim(),
-  skills_experience: document.getElementById("jobSkills").value.trim(),
-employer_consent: document.getElementById("employerConsent").checked,
-    cv_path: cvPath
-  });
-
-if (saveError) {
-  document.getElementById("jobResult").textContent =
-    "Unable to save profile: " + saveError.message;
-  return;
-}
-  document.getElementById("jobResult").innerHTML =
-    "<h3>Profile saved successfully!</h3>" +
-    "<h4>Your Job-Seeker Profile Preview</h4>" +
-
-    "<p><strong>Name:</strong> "+safe(document.getElementById("jobName").value)+"</p>" +
-
-    "<p><strong>Desired job:</strong> "+safe(document.getElementById("jobTitle").value)+"</p>" +
-
-    "<p><strong>Email:</strong> "+safe(document.getElementById("jobEmail").value)+"</p>" +
-
-    "<p><strong>Skills and experience:</strong> "+safe(document.getElementById("jobSkills").value)+"</p>";
-
+  result.innerHTML =
+    "<h3>Profile submitted successfully!</h3>" +
+    "<h4>Your Job-Seeker Profile</h4>" +
+    "<p><strong>Name:</strong> " + safe(fullName) + "</p>" +
+    "<p><strong>Phone:</strong> " + safe(phone) + "</p>" +
+    "<p><strong>Desired job:</strong> " + safe(desiredJob) + "</p>" +
+    "<p><strong>Email:</strong> " + safe(email) + "</p>" +
+    "<p><strong>Skills:</strong> " + safe(skills) + "</p>" +
+    "<p><strong>Work experience:</strong> " + safe(workExperience) + "</p>" +
+    "<p><strong>Experience status:</strong> " + safe(experienceStatus) + "</p>" +
+    "<p>Your CV has been uploaded successfully.</p>";
 });
 async function loadFashionProducts() {
   const box = document.getElementById("fashionProductList");
@@ -810,7 +876,7 @@ async function loadAdminCVs() {
 
   const { data, error } = await ventoraSupabase
     .from("ventora_job_profiles")
-    .select("full_name, desired_job, email, skills_experience, cv_path, employer_consent")
+   .select("full_name, phone_number, desired_job, email, skills, work_experience, experience_status, skills_experience, cv_path, employer_consent")
 .eq("employer_consent", true)
     .order("created_at", { ascending: false });
 
@@ -831,9 +897,13 @@ async function loadAdminCVs() {
     const details = document.createElement("p");
 
     details.textContent =
-      (item.full_name || "Unnamed applicant") +
-      " — " + (item.desired_job || "No job specified") +
-      " — " + (item.email || "No email");
+  "Name: " + (item.full_name || "Unnamed applicant") +
+  " | Phone: " + (item.phone_number || "Not provided") +
+  " | Desired job: " + (item.desired_job || "No job specified") +
+  " | Email: " + (item.email || "No email") +
+  " | Skills: " + (item.skills || item.skills_experience || "No skills listed") +
+  " | Work experience: " + (item.work_experience || "Not provided") +
+  " | Experience status: " + (item.experience_status || "Not provided");
 
     row.appendChild(details);
 
@@ -925,7 +995,7 @@ async function loadEmployerJobProfiles() {
 
   const { data, error } = await ventoraSupabase
     .from("ventora_job_profiles")
-    .select("full_name, desired_job, email, skills_experience, cv_path")
+    .select("full_name, phone_number, desired_job, email, skills, work_experience, experience_status, skills_experience, cv_path")
     .eq("employer_consent", true)
     .order("created_at", { ascending: false });
 
@@ -946,10 +1016,13 @@ async function loadEmployerJobProfiles() {
     const details = document.createElement("p");
 
     details.textContent =
-      (item.full_name || "Unnamed applicant") +
-      " — " + (item.desired_job || "No job specified") +
-      " — " + (item.email || "No email") +
-      " — " + (item.skills_experience || "No skills listed");
+  "Name: " + (item.full_name || "Unnamed applicant") +
+  " | Phone: " + (item.phone_number || "Not provided") +
+  " | Desired job: " + (item.desired_job || "No job specified") +
+  " | Email: " + (item.email || "No email") +
+  " | Skills: " + (item.skills || item.skills_experience || "No skills listed") +
+  " | Work experience: " + (item.work_experience || "Not provided") +
+  " | Experience status: " + (item.experience_status || "Not provided");
 
     row.appendChild(details);
 
