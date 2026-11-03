@@ -1143,7 +1143,37 @@ async function loadAdminFashionProducts() {
         row.appendChild(photo);
       }
     }
+    const deleteButton = document.createElement("button");
+    deleteButton.type = "button";
+    deleteButton.textContent = "Delete";
 
+    deleteButton.addEventListener("click", async () => {
+      if (!confirm("Are you sure you want to delete this fashion product?")) return;
+
+      const { error: deleteError } = await ventoraSupabase
+        .from("fashion_listings")
+        .delete()
+        .eq("id", item.id);
+
+      if (deleteError) {
+        alert("Could not delete product: " + deleteError.message);
+        return;
+      }
+
+      row.remove();
+
+      if (item.image_path) {
+        const { error: imageDeleteError } = await ventoraSupabase.storage
+          .from("ventora-fashion")
+          .remove([item.image_path]);
+
+        if (imageDeleteError) {
+          alert("Product deleted, but its photo could not be removed.");
+        }
+      }
+    });
+
+    row.appendChild(deleteButton);
     box.appendChild(row);
   }
 }
