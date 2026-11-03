@@ -310,19 +310,21 @@ document.getElementById("registerEmployer").addEventListener("click", async func
 
   result.textContent = "Registration submitted successfully. Your approval status is pending.";
 });
-document.getElementById("signOutButton").addEventListener("click", async function () {
-  const { error } = await ventoraSupabase.auth.signOut();
+document.addEventListener("DOMContentLoaded", function () {
+  document.getElementById("signOutButton").addEventListener("click", async function () {
+    const { error } = await ventoraSupabase.auth.signOut();
 
-  if (error) {
-    alert("Sign out failed: " + error.message);
-    return;
-  }
+    if (error) {
+      alert("Sign out failed: " + error.message);
+      return;
+    }
 
-  document.getElementById("adminDashboard").hidden = true;
-  document.getElementById("employerDashboard").hidden = true;
-  document.getElementById("signOutButton").hidden = true;
+    document.getElementById("adminDashboard").hidden = true;
+    document.getElementById("employerDashboard").hidden = true;
+    document.getElementById("signOutButton").hidden = true;
 
-  document.getElementById("accountResult").textContent = "You have signed out successfully.";
+    document.getElementById("accountResult").textContent = "You have signed out successfully.";
+  });
 });
 
 
@@ -775,16 +777,21 @@ const ventoraSupabase = window.supabase.createClient(
   SUPABASE_URL,
   SUPABASE_KEY
 );
-async function checkLoginSession() {
-  const { data: { session } } = await ventoraSupabase.auth.getSession();
+document.addEventListener("DOMContentLoaded", function () {
+  const signOutButton = document.getElementById("signOutButton");
 
-  document.getElementById("signOutButton").hidden = !session;
-}
+  if (!signOutButton) return;
 
-checkLoginSession();
+  async function checkLoginSession() {
+    const { data: { session } } = await ventoraSupabase.auth.getSession();
+    signOutButton.hidden = !session;
+  }
 
-ventoraSupabase.auth.onAuthStateChange((event, session) => {
-  document.getElementById("signOutButton").hidden = !session;
+  checkLoginSession();
+
+  ventoraSupabase.auth.onAuthStateChange((event, session) => {
+    signOutButton.hidden = !session;
+  });
 });  
 document.getElementById("registerAccount").addEventListener("click", async function () {
   const email = document.getElementById("accountEmail").value.trim();
