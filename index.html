@@ -1214,31 +1214,38 @@ document.getElementById("adminDashboard").hidden = false;
 
 loadSavedBusinesses();
 </script>
+<button type="button" id="signOutButton" hidden>Sign Out</button>
+
 <section id="adminDashboard" hidden>
   <h2>VENTORA Admin Dashboard</h2>
+
   <div id="admin-cv-list">
-  <h3>Submitted CVs</h3>
-  <p>Loading submitted CVs...</p>
-</div>
+    <h3>Submitted CVs</h3>
+    <p>Loading submitted CVs...</p>
+  </div>
+
   <div id="admin-employer-list">
-  <h3>Employer Registrations</h3>
-  <p>Loading employer registrations...</p>
-</div>
+    <h3>Employer Registrations</h3>
+    <p>Loading employer registrations...</p>
+  </div>
+
   <h3>Manage Business Listings</h3>
   <div id="adminBusinessListings">Loading business listings...</div>
   <button type="button" onclick="loadAdminBusinessListings()">Refresh Listings</button>
+
   <h3>Manage Fashion Products</h3>
-<div id="adminFashionListings">Loading fashion products...</div>
-<button type="button" onclick="loadAdminFashionProducts()">Refresh Fashion Products</button>
+  <div id="adminFashionListings">Loading fashion products...</div>
+  <button type="button" onclick="loadAdminFashionProducts()">Refresh Fashion Products</button>
 </section>
+
 <section id="employerDashboard" hidden>
   <h2>VENTORA Employer Dashboard</h2>
-  <button type="button" id="signOutButton" hidden>Sign Out</button>
   <h3>Job Seeker Profiles</h3>
   <div id="employer-job-profiles">
     Loading job seeker profiles...
   </div>
 </section>
+
 </body>
 </html>
   
