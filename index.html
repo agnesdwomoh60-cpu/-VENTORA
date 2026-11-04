@@ -702,7 +702,13 @@ whatsapp.style.marginTop = "10px";
 document.addEventListener("DOMContentLoaded", function () {
 document.getElementById("fashionForm").addEventListener("submit", async function(event) {
   event.preventDefault();
+const { data: { user }, error: userError } = await ventoraSupabase.auth.getUser();
 
+if (userError || !user) {
+  document.getElementById("fashionMessage").textContent =
+    "Please create an account or sign in before submitting a fashion product.";
+  return;
+}
   const message = document.getElementById("fashionMessage");
   const image = document.getElementById("fashionImage").files[0];
 
