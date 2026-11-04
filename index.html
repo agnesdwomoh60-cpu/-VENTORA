@@ -308,7 +308,13 @@ footer a{color:#f2c45a}
 
 document.getElementById("businessForm").addEventListener("submit", async function(event) {
   event.preventDefault();
+const { data: { user }, error: userError } = await ventoraSupabase.auth.getUser();
 
+if (userError || !user) {
+  document.getElementById("businessResult").textContent =
+    "Please create an account or sign in before submitting a business listing.";
+  return;
+}
   const businessName = document.getElementById("businessName").value.trim();
   const businessDescription = document.getElementById("businessDescription").value.trim();
   const businessContact = document.getElementById("businessContact").value.trim();
@@ -333,11 +339,18 @@ const businessLocation = document.getElementById("businessLocation").value.trim(
   }
 
   document.getElementById("businessResult").innerHTML =
-    "<h3>Business Listing Saved!</h3><p><strong>" +
-    escapeText(businessName) +
-    "</strong></p><p>" +
-    escapeText(businessDescription) +
-    "</p><p>Your listing has been saved to VENTORA.</p>";
+  "<h3>Business Listing Saved!</h3><p><strong>" +
+  escapeText(businessName) +
+  "</strong></p><p>" +
+  escapeText(businessLocation) +
+  "</p><p>" +
+  escapeText(businessDescription) +
+  "</p><p>Your listing has been saved to VENTORA.</p>";
+    
+    
+    
+    
+    
 });
 
 
