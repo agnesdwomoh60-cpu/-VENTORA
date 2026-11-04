@@ -291,7 +291,7 @@ footer a{color:#f2c45a}
     <p><input id="businessType" placeholder="Type of business" required style="width:100%;padding:12px;"></p>
 
     <p><input id="businessContact" placeholder="Contact email or phone" required style="width:100%;padding:12px;"></p>
-<p><input id="businessLocation" placeholder="Business location (e.g. Kumasi, Ghana)" style="width:100%;padding:12px;"></p>
+<p><input id="businessLocation" placeholder="City or region (e.g. Kumasi)" style="width:100%;padding:12px;"></p>
     <p><input id="businessCountry" placeholder="Country (e.g. Ghana, United Kingdom)" required style="width:100%;padding:12px;"></p>
     <p><textarea id="businessDescription" placeholder="Describe your business" required style="width:100%;padding:12px;"></textarea></p>
 
@@ -320,13 +320,16 @@ if (userError || !user) {
   const businessDescription = document.getElementById("businessDescription").value.trim();
   const businessContact = document.getElementById("businessContact").value.trim();
 const businessLocation = document.getElementById("businessLocation").value.trim();
+ const businessCountry = document.getElementById("businessCountry").value.trim(); 
   const { error } = await ventoraSupabase
     .from("ventora_business_listings")
     .insert({
   business_name: businessName,
   phone: businessContact,
   description: businessDescription,
-  location: businessLocation
+  location: businessLocation,
+country: businessCountry
+      
 });
       
       
@@ -956,7 +959,12 @@ async function loadAdminBusinessListings() {
   (index + 1) + ". " +
   (item.business_name || "Unnamed business") +
   " — " + (item.location ? item.location + " — " : "") +
+  (item.country ? "Country: " + item.country + " — " : "") +
   (item.description || "No description") + " ";
+  
+  
+  
+  
       
       
       
