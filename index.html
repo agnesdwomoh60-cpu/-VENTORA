@@ -508,7 +508,12 @@ document.getElementById("jobForm").addEventListener("submit", async function(eve
   event.preventDefault();
 
   const result = document.getElementById("jobResult");
+const { data: { user }, error: userError } = await ventoraSupabase.auth.getUser();
 
+if (userError || !user) {
+  result.textContent = "Please create an account or sign in before submitting your job profile and CV.";
+  return;
+}
   function safe(value) {
     return String(value).replace(/[&<>"']/g, function(char) {
       return {
@@ -543,8 +548,9 @@ document.getElementById("jobForm").addEventListener("submit", async function(eve
 
   result.textContent = "Uploading your CV and saving your profile...";
 
-  const cvPath = Date.now() + "-" +
+  const cvPath = user.id + "/" + Date.now() + "-" +
     cvFile.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+    
 
   const { error: uploadError } = await ventoraSupabase
     .storage
@@ -559,6 +565,7 @@ document.getElementById("jobForm").addEventListener("submit", async function(eve
   const { error: saveError } = await ventoraSupabase
     .from("ventora_job_profiles")
     .insert({
+      user_id: user.id,
       full_name: fullName,
       phone_number: phone,
       desired_job: desiredJob,
