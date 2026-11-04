@@ -312,14 +312,19 @@ document.getElementById("businessForm").addEventListener("submit", async functio
   const businessName = document.getElementById("businessName").value.trim();
   const businessDescription = document.getElementById("businessDescription").value.trim();
   const businessContact = document.getElementById("businessContact").value.trim();
-
+const businessLocation = document.getElementById("businessLocation").value.trim();
   const { error } = await ventoraSupabase
     .from("ventora_business_listings")
     .insert({
-      business_name: businessName,
-      phone: businessContact,
-      description: businessDescription
-    });
+  business_name: businessName,
+  phone: businessContact,
+  description: businessDescription,
+  location: businessLocation
+});
+      
+      
+      
+    
 
   if (error) {
     document.getElementById("businessResult").textContent =
