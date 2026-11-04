@@ -562,6 +562,7 @@ if (userError || !user) {
 
   const fullName = document.getElementById("jobName").value.trim();
   const phone = document.getElementById("jobPhone").value.trim();
+  const country = document.getElementById("jobCountry").value.trim();
   const desiredJob = document.getElementById("jobTitle").value.trim();
   const email = document.getElementById("jobEmail").value.trim();
   const skills = document.getElementById("jobSkills").value.trim();
@@ -602,6 +603,7 @@ if (userError || !user) {
       user_id: user.id,
       full_name: fullName,
       phone_number: phone,
+      country: country,
       desired_job: desiredJob,
       email: email,
       skills: skills,
@@ -1037,11 +1039,19 @@ async function loadAdminCVs() {
     details.textContent =
   "Name: " + (item.full_name || "Unnamed applicant") +
   " | Phone: " + (item.phone_number || "Not provided") +
+  " | Country: " + (item.country || "Not provided") +
   " | Desired job: " + (item.desired_job || "No job specified") +
   " | Email: " + (item.email || "No email") +
   " | Skills: " + (item.skills || item.skills_experience || "No skills listed") +
   " | Work experience: " + (item.work_experience || "Not provided") +
   " | Experience status: " + (item.experience_status || "Not provided");
+  
+  
+  
+  
+  
+  
+  
 
     row.appendChild(details);
 
