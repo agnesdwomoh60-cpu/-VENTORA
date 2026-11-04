@@ -933,9 +933,13 @@ async function loadAdminBusinessListings() {
     const details = document.createElement("span");
 
     details.textContent =
-      (index + 1) + ". " +
-      (item.business_name || "Unnamed business") +
-      " — " + (item.description || "No description") + " ";
+  (index + 1) + ". " +
+  (item.business_name || "Unnamed business") +
+  " — " + (item.location ? item.location + " — " : "") +
+  (item.description || "No description") + " ";
+      
+      
+      
 
     const button = document.createElement("button");
     button.type = "button";
