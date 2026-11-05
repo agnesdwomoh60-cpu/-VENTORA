@@ -774,7 +774,7 @@ if (userError || !user) {
       category: document.getElementById("fashionCategory").value.trim(),
       description: document.getElementById("fashionDescription").value.trim(),
       price: priceValue === "" ? null : Number(priceValue),
-      currency: "GHS",
+      currency: document.getElementById("fashionCurrency").value,
       image_path: imagePath,
       contact: document.getElementById("fashionContact").value.trim(),
 country: document.getElementById("fashionCountry").value.trim()
