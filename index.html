@@ -772,7 +772,8 @@ if (userError || !user) {
       price: priceValue === "" ? null : Number(priceValue),
       currency: "GHS",
       image_path: imagePath,
-      contact: document.getElementById("fashionContact").value.trim()
+      contact: document.getElementById("fashionContact").value.trim(),
+country: document.getElementById("fashionCountry").value.trim()
     });
 
   if (insertError) {
