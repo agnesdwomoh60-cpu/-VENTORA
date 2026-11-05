@@ -672,7 +672,11 @@ async function loadFashionProducts() {
     details.textContent =
   (item.category || "Fashion") + " — " +
   (item.description || "No description") + " — " +
-    (item.price !== null ? item.currency + " " + item.price : "Price not listed");
+  (item.price !== null ? item.currency + " " + item.price : "Price not listed") +
+  " — Country: " + (item.country || "Not provided");
+  
+  
+    
   
 
     card.appendChild(title);
