@@ -1166,11 +1166,19 @@ async function loadEmployerJobProfiles() {
     details.textContent =
   "Name: " + (item.full_name || "Unnamed applicant") +
   " | Phone: " + (item.phone_number || "Not provided") +
+  " | Country: " + (item.country || "Not provided") +
   " | Desired job: " + (item.desired_job || "No job specified") +
   " | Email: " + (item.email || "No email") +
   " | Skills: " + (item.skills || item.skills_experience || "No skills listed") +
   " | Work experience: " + (item.work_experience || "Not provided") +
   " | Experience status: " + (item.experience_status || "Not provided");
+  
+  
+  
+  
+  
+  
+  
 
     row.appendChild(details);
 
