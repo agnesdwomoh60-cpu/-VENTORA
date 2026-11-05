@@ -391,8 +391,8 @@ document.getElementById("registerEmployer").addEventListener("click", async func
   const contactName = document.getElementById("employerContact").value.trim();
   const email = document.getElementById("employerEmail").value.trim();
   const phone = document.getElementById("employerPhone").value.trim();
-
-  if (!companyName || !contactName || !email || !phone) {
+const country = document.getElementById("employerCountry").value.trim();
+  if (!companyName || !contactName || !email || !phone || !country) {
     result.textContent = "Please complete all required fields.";
     return;
   }
@@ -405,6 +405,7 @@ document.getElementById("registerEmployer").addEventListener("click", async func
       contact_name: contactName,
       email: email,
       phone: phone,
+      country: country,
       website: document.getElementById("employerWebsite").value.trim(),
       business_description: document.getElementById("employerDescription").value.trim()
     });
@@ -1104,10 +1105,15 @@ async function loadAdminEmployers() {
     const details = document.createElement("p");
 
     details.textContent =
-      (item.company_name || "Unnamed company") +
-      " — " + (item.contact_name || "No contact") +
-      " — " + (item.email || "No email") +
-      " — Status: " + (item.approval_status || "pending");
+  (item.company_name || "Unnamed company") +
+  " — " + (item.contact_name || "No contact") +
+  " — " + (item.email || "No email") +
+  " — Country: " + (item.country || "Not provided") +
+  " — Status: " + (item.approval_status || "pending");
+      
+      
+      
+      
 
     row.appendChild(details);
 
