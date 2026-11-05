@@ -666,33 +666,67 @@ async function loadFashionProducts() {
     box.textContent = "No fashion products listed yet.";
     return;
   }
-
   box.innerHTML = "";
 
-  for (const item of data) {
-    const card = document.createElement("div");
-    const title = document.createElement("h4");
-    const details = document.createElement("p");
-    card.style.border = "1px solid #ddd";
-    card.style.borderRadius = "12px";
-    card.style.padding = "15px";
-    card.style.marginBottom = "20px";
-    card.style.maxWidth = "320px";
-    card.style.backgroundColor = "#fff";
-    title.textContent = item.product_name || "Unnamed product";
-    details.textContent =
-  (item.category || "Fashion") + " — " +
-  (item.description || "No description") + " — " +
-  (item.price !== null ? item.currency + " " + item.price : "Price not listed") +
-  " — Country: " + (item.country || "Not provided");
-  
-  
+for (const item of data) {
+  const card = document.createElement("div");
+  const title = document.createElement("h4");
+  const details = document.createElement("p");
+
+  card.style.border = "1px solid #ddd";
+  card.style.borderRadius = "12px";
+  card.style.padding = "15px";
+  card.style.marginBottom = "20px";
+  card.style.maxWidth = "320px";
+  card.style.backgroundColor = "#fff";
+
+  title.textContent = item.product_name || "Unnamed product";
+
+  const originalPrice =
+    item.price !== null && item.price !== undefined
+      ? item.currency + " " + item.price
+      : "Price not listed";
+
+  let convertedPriceText = "";
+
+  if (
+    item.price !== null &&
+    item.price !== undefined &&
+    item.currency &&
+    window.convertVentoraPrice
+  ) {
+    const convertedPrice = window.convertVentoraPrice(
+      item.price,
+      item.currency
+    );
+
+    const buyerCurrency =
+      document.getElementById("buyerCurrency").value;
+
+    if (
+      convertedPrice !== null &&
+      item.currency.toUpperCase() !== buyerCurrency
+    ) {
+      convertedPriceText =
+        " (approximately " +
+        buyerCurrency +
+        " " +
+        convertedPrice.toFixed(2) +
+        ")";
+    }
+  }
+
+  details.textContent =
+    (item.category || "Fashion") + " — " +
+    (item.description || "No description") + " — " +
+    originalPrice +
+    convertedPriceText +
+    " — Country: " + (item.country || "Not provided");
+
+  card.appendChild(title);
+  card.appendChild(details);
     
-  
-
-    card.appendChild(title);
-    card.appendChild(details);
-
+    
 if (item.contact) {
     const whatsapp = document.createElement("a");
       const phone = item.contact.replace(/\D/g, "");
@@ -1547,7 +1581,75 @@ loadSavedBusinesses();
   <h3>11. VENTORA's Role and Responsibilities</h3>
 <p>VENTORA operates as an online platform that connects businesses, job seekers, employers and African fashion sellers. Unless expressly stated otherwise, VENTORA is not the employer, recruitment agency, seller, buyer or payment processor in transactions or arrangements between users. VENTORA does not make hiring decisions, sell products listed by users, collect payments on behalf of users or guarantee the quality, safety or delivery of products and services offered by users. Users are responsible for verifying information and agreeing on their own terms before entering into any transaction or arrangement. VENTORA may review or remove content that violates these Terms of Use.</p>
 </section>
+<script>
+window.ventoraCurrencyRates = null;
+window.ventoraCurrencyRateDate = null;
 
+window.convertVentoraPrice = function(amount, originalCurrency) {
+  if (!window.ventoraCurrencyRates) return null;
+
+  const original = String(originalCurrency).toLowerCase();
+  const selected = document.getElementById("buyerCurrency").value.toLowerCase();
+
+  if (original === selected) return Number(amount);
+
+  const rate = Number(window.ventoraCurrencyRates[original]);
+
+  if (!rate || !Number.isFinite(rate)) return null;
+
+  return Number(amount) / rate;
+};
+
+async function loadVentoraCurrencyRates() {
+  const selector = document.getElementById("buyerCurrency");
+  const base = selector.value.toLowerCase();
+
+  const urls = [
+    `https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/${base}.min.json`,
+    `https://latest.currency-api.pages.dev/v1/currencies/${base}.min.json`,
+    `https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/${base}.json`,
+    `https://latest.currency-api.pages.dev/v1/currencies/${base}.json`
+  ];
+
+  for (const url of urls) {
+    try {
+      const response = await fetch(url);
+      if (!response.ok) continue;
+
+      const data = await response.json();
+
+      if (data[base]) {
+        window.ventoraCurrencyRates = data[base];
+        window.ventoraCurrencyRateDate = data.date;
+
+        window.dispatchEvent(
+          new Event("ventoraCurrencyRatesUpdated")
+        );
+if (typeof loadFashionProducts === "function") {
+  loadFashionProducts();
+}
+        return;
+      }
+    } catch (error) {
+      // Try the next available exchange-rate address.
+    }
+  }
+
+  console.error("VENTORA exchange rates could not be loaded.");
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+  const selector = document.getElementById("buyerCurrency");
+
+  if (!selector) return;
+
+  loadVentoraCurrencyRates();
+
+  selector.addEventListener("change", function() {
+    loadVentoraCurrencyRates();
+  });
+});
+</script>
 </body>
 </html>
   
