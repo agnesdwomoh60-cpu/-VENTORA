@@ -1020,6 +1020,41 @@ const ventoraSupabase = window.supabase.createClient(
   SUPABASE_URL,
   SUPABASE_KEY
 );
+const jobAdvertisementForm = document.getElementById("jobAdvertisementForm");
+if (jobAdvertisementForm) {
+  jobAdvertisementForm.addEventListener("submit", async function(event) {
+  event.preventDefault();
+
+  const result = document.getElementById("jobAdvertisementResult");
+  result.textContent = "Submitting your job advert...";
+
+  const { data: { user }, error: userError } = await ventoraSupabase.auth.getUser();
+
+  if (userError || !user) {
+    result.textContent = "Please sign in before submitting a job advert.";
+    return;
+  }
+
+  const { error } = await ventoraSupabase
+    .from("ventora_job_advertisements")
+    .insert({
+      user_id: user.id,
+      company_name: document.getElementById("jobCompany").value.trim(),
+      job_title: document.getElementById("jobTitle").value.trim(),
+      job_description: document.getElementById("jobDescription").value.trim(),
+      country: document.getElementById("jobCountry").value.trim(),
+      contact_email: document.getElementById("jobEmail").value.trim()
+    });
+
+  if (error) {
+    result.textContent = "Unable to submit job advert: " + error.message;
+    return;
+  }
+
+  result.textContent = "Your job advert has been submitted for review.";
+  document.getElementById("jobAdvertisementForm").reset();
+  });
+}
 document.addEventListener("DOMContentLoaded", function () {
   const signOutButton = document.getElementById("signOutButton");
 
