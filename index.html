@@ -1463,7 +1463,7 @@ document.getElementById("adminDashboard").hidden = false;
 
   const { data, error } = await ventoraSupabase
     .from("ventora_business_listings")
-    .select("business_name, description, phone")
+    .select("business_name, description, phone, is_featured")
     .order("created_at", { ascending: false });
 
   if (error) {
