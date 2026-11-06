@@ -1541,6 +1541,28 @@ async function loadAdminFashionProducts() {
     });
 
     row.appendChild(rejectButton);
+    const sponsoredButton = document.createElement("button");
+sponsoredButton.type = "button";
+sponsoredButton.textContent = item.is_sponsored
+  ? "Remove Sponsorship"
+  : "Mark as Sponsored";
+
+sponsoredButton.addEventListener("click", async () => {
+  const { error } = await ventoraSupabase
+    .from("ventora_job_advertisements")
+    .update({ is_sponsored: !item.is_sponsored })
+    .eq("id", item.id);
+
+  if (error) {
+    alert("Could not update sponsorship: " + error.message);
+    return;
+  }
+
+  alert("Job sponsorship status updated.");
+  loadAdminJobAdvertisements();
+});
+
+row.appendChild(sponsoredButton);
     box.appendChild(row);
   });
 } 
