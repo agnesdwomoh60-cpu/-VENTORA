@@ -1459,7 +1459,28 @@ async function loadAdminFashionProducts() {
         }
       }
     });
+const featureButton = document.createElement("button");
+featureButton.type = "button";
+featureButton.textContent = item.is_featured
+  ? "Remove Feature"
+  : "Feature Fashion Product";
 
+featureButton.addEventListener("click", async () => {
+  const { error } = await ventoraSupabase
+    .from("fashion_listings")
+    .update({ is_featured: !item.is_featured })
+    .eq("id", item.id);
+
+  if (error) {
+    alert("Could not update fashion promotion: " + error.message);
+    return;
+  }
+
+  alert("Fashion promotion status updated.");
+  loadAdminFashionProducts();
+});
+
+row.appendChild(featureButton);
     row.appendChild(deleteButton);
     box.appendChild(row);
   }
