@@ -1691,6 +1691,123 @@ document.addEventListener("DOMContentLoaded", function() {
   });
 });
 </script>
+
+<style>
+#ventora-cookie-banner {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  box-sizing: border-box;
+  background: #ffffff;
+  color: #202b25;
+  padding: 20px;
+  box-shadow: 0 -3px 15px rgba(0,0,0,0.2);
+  z-index: 99999;
+  font-size: 14px;
+}
+#ventora-cookie-banner .cookie-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 12px;
+}
+#ventora-cookie-banner button {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+}
+#ventora-cookie-banner .accept {
+  background: #245b42;
+  color: white;
+}
+#ventora-cookie-banner .reject {
+  background: #eeeeee;
+  color: #202b25;
+}
+#ventora-cookie-banner .settings {
+  background: #d8b45a;
+  color: #202b25;
+}
+#ventora-cookie-settings {
+  display: none;
+  margin-top: 12px;
+}
+</style>
+
+<div id="ventora-cookie-banner">
+  <strong>VENTORA Cookie Notice</strong>
+  <p>
+    We use essential browser storage to make VENTORA work properly,
+    including account sign-in and session management.
+    Optional analytics cookies are currently not enabled.
+    You can choose whether to allow optional cookies.
+  </p>
+
+  <div class="cookie-buttons">
+    <button class="accept" onclick="ventoraCookieChoice(true)">
+      Accept All
+    </button>
+    <button class="reject" onclick="ventoraCookieChoice(false)">
+      Reject Optional
+    </button>
+    <button class="settings" onclick="ventoraShowCookieSettings()">
+      Cookie Settings
+    </button>
+  </div>
+
+  <div id="ventora-cookie-settings">
+    <label>
+      <input type="checkbox" id="ventora-analytics-choice">
+      Allow optional analytics cookies (currently not enabled)
+    </label>
+    <br><br>
+    <button class="accept" onclick="ventoraSaveCookieSettings()">
+      Save Choices
+    </button>
+  </div>
+</div>
+
+<script>
+(function() {
+  const banner = document.getElementById("ventora-cookie-banner");
+
+  try {
+    const savedChoice = localStorage.getItem("ventora_cookie_consent");
+    if (!savedChoice) {
+      banner.style.display = "block";
+    }
+  } catch (error) {
+    banner.style.display = "block";
+  }
+})();
+
+function ventoraCookieChoice(accepted) {
+  try {
+    localStorage.setItem(
+      "ventora_cookie_consent",
+      accepted ? "accepted" : "rejected"
+    );
+    document.getElementById("ventora-cookie-banner").style.display = "none";
+  } catch (error) {
+    alert("Your browser could not save this choice. Please check your browser settings.");
+  }
+}
+
+function ventoraShowCookieSettings() {
+  document.getElementById("ventora-cookie-settings").style.display = "block";
+}
+
+function ventoraSaveCookieSettings() {
+  const analytics = document.getElementById("ventora-analytics-choice").checked;
+  ventoraCookieChoice(analytics);
+}
+</script>
+
+  
 </body>
 </html>
   
