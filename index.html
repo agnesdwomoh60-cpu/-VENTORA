@@ -1461,6 +1461,86 @@ async function loadAdminFashionProducts() {
     box.appendChild(row);
   }
 }
+ async function loadAdminJobAdvertisements() {
+  const box = document.getElementById("adminJobAdvertisements");
+
+  if (!box) return;
+
+  box.textContent = "Loading job advertisements...";
+
+  const { data, error } = await ventoraSupabase
+    .from("ventora_job_advertisements")
+    .select("*")
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    box.textContent = "Could not load job adverts: " + error.message;
+    return;
+  }
+
+  if (!data || data.length === 0) {
+    box.textContent = "No job advertisements submitted yet.";
+    return;
+  }
+
+  box.innerHTML = "";
+
+  data.forEach(item => {
+    const row = document.createElement("div");
+    const details = document.createElement("p");
+
+    details.textContent =
+      (item.company_name || "Company") +
+      " — " + (item.job_title || "Job title") +
+      " — " + (item.country || "") +
+      " — Status: " + item.approval_status;
+
+    row.appendChild(details);
+
+    const approveButton = document.createElement("button");
+    approveButton.type = "button";
+    approveButton.textContent = "Approve";
+
+    approveButton.addEventListener("click", async () => {
+      const { error } = await ventoraSupabase
+        .from("ventora_job_advertisements")
+        .update({ approval_status: "approved" })
+        .eq("id", item.id);
+
+      if (error) {
+        alert("Could not approve job advert: " + error.message);
+        return;
+      }
+
+      alert("Job advert approved.");
+      loadAdminJobAdvertisements();
+    });
+
+    row.appendChild(approveButton);
+
+    const rejectButton = document.createElement("button");
+    rejectButton.type = "button";
+    rejectButton.textContent = "Reject";
+
+    rejectButton.addEventListener("click", async () => {
+      const { error } = await ventoraSupabase
+        .from("ventora_job_advertisements")
+        .update({ approval_status: "rejected" })
+        .eq("id", item.id);
+
+      if (error) {
+        alert("Could not reject job advert: " + error.message);
+        return;
+      }
+
+      alert("Job advert rejected.");
+      loadAdminJobAdvertisements();
+    });
+
+    row.appendChild(rejectButton);
+    box.appendChild(row);
+  });
+} 
   document.getElementById("signInAccount").addEventListener("click", async function () {
   const email = document.getElementById("accountEmail").value.trim();
   const password = document.getElementById("accountPassword").value;
@@ -1493,6 +1573,7 @@ document.getElementById("adminDashboard").hidden = false;
       loadAdminCVs();
       loadAdminEmployers();
       loadAdminFashionProducts();
+      loadAdminJobAdvertisements();
       result.textContent = "Signed in successfully. Administrator access confirmed.";
    }
     else {
@@ -1592,7 +1673,9 @@ loadSavedBusinesses();
   <h3>Manage Business Listings</h3>
   <div id="adminBusinessListings">Loading business listings...</div>
   <button type="button" onclick="loadAdminBusinessListings()">Refresh Listings</button>
-
+<h3>Manage Job Advertisements</h3>
+<div id="adminJobAdvertisements">Loading job advertisements...</div>
+<button type="button" onclick="loadAdminJobAdvertisements()">Refresh Job Advertisements</button>
   <h3>Manage Fashion Products</h3>
   <div id="adminFashionListings">Loading fashion products...</div>
   <button type="button" onclick="loadAdminFashionProducts()">Refresh Fashion Products</button>
