@@ -1483,7 +1483,10 @@ document.getElementById("adminDashboard").hidden = false;
       : phone;
 
     return (
-      "<div class='card'><h3>" +
+      "<div class='card'>" +
+      (business.is_featured ? "<p><strong>⭐ Featured Business</strong></p>" : "") +
+      "<h3>" +
+      
       escapeText(business.business_name || "") +
       "</h3><p>" +
       escapeText(business.description || "") +
