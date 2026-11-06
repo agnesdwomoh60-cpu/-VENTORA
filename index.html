@@ -1052,7 +1052,7 @@ async function loadAdminBusinessListings() {
 
   const { data, error } = await ventoraSupabase
     .from("ventora_business_listings")
-    .select("id, business_name, description, phone")
+    .select("id, business_name, description, phone, is_featured")
     .order("created_at", { ascending: false });
 
   if (error) {
@@ -1105,8 +1105,26 @@ async function loadAdminBusinessListings() {
       alert("Business listing deleted.");
       loadAdminBusinessListings();
     });
+const featureButton = document.createElement("button");
+featureButton.type = "button";
+featureButton.textContent = item.is_featured ? "Remove Feature" : "Feature Business";
 
+featureButton.addEventListener("click", async () => {
+  const { error } = await ventoraSupabase
+    .from("ventora_business_listings")
+    .update({ is_featured: !item.is_featured })
+    .eq("id", item.id);
+
+  if (error) {
+    alert("Could not update feature status: " + error.message);
+    return;
+  }
+
+  alert("Business promotion status updated.");
+  loadAdminBusinessListings();
+});
     row.appendChild(details);
+    row.appendChild(featureButton);
     row.appendChild(button);
     box.appendChild(row);
   });
