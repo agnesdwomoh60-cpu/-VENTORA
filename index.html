@@ -1029,6 +1029,41 @@ const ventoraSupabase = window.supabase.createClient(
   SUPABASE_URL,
   SUPABASE_KEY
 );
+const websiteAdForm = document.getElementById("websiteAdForm");
+
+if (websiteAdForm) {
+  websiteAdForm.addEventListener("submit", async function(event) {
+    event.preventDefault();
+
+    const result = document.getElementById("websiteAdResult");
+    result.textContent = "Saving advertisement...";
+
+    const { data: { user }, error: userError } =
+      await ventoraSupabase.auth.getUser();
+
+    if (userError || !user) {
+      result.textContent = "Please sign in as an administrator.";
+      return;
+    }
+
+    const { error } = await ventoraSupabase
+      .from("ventora_website_ads")
+      .insert({
+        title: document.getElementById("websiteAdTitle").value.trim(),
+        image_url: document.getElementById("websiteAdImage").value.trim(),
+        destination_url: document.getElementById("websiteAdLink").value.trim() || null
+      });
+
+    if (error) {
+      result.textContent = "Could not save advertisement: " + error.message;
+      return;
+    }
+
+    result.textContent = "Advertisement saved. It is inactive until an administrator activates it.";
+    websiteAdForm.reset();
+    loadAdminWebsiteAds();
+  });
+}  
 const jobAdvertisementForm = document.getElementById("jobAdvertisementForm");
 if (jobAdvertisementForm) {
   jobAdvertisementForm.addEventListener("submit", async function(event) {
@@ -1491,6 +1526,71 @@ row.appendChild(featureButton);
     box.appendChild(row);
   }
 }
+ async function loadAdminWebsiteAds() {
+  const box = document.getElementById("adminWebsiteAds");
+
+  if (!box) return;
+
+  box.textContent = "Loading website advertisements...";
+
+  const { data, error } = await ventoraSupabase
+    .from("ventora_website_ads")
+    .select("*")
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    box.textContent = "Could not load website advertisements: " + error.message;
+    return;
+  }
+
+  if (!data || data.length === 0) {
+    box.textContent = "No website advertisements added yet.";
+    return;
+  }
+
+  box.innerHTML = "";
+
+  data.forEach(ad => {
+    const row = document.createElement("div");
+    const details = document.createElement("p");
+
+    details.textContent =
+      ad.title + " — Status: " + (ad.is_active ? "Active" : "Inactive");
+
+    row.appendChild(details);
+
+    const photo = document.createElement("img");
+    photo.src = ad.image_url;
+    photo.alt = ad.title;
+    photo.style.maxWidth = "250px";
+    photo.style.height = "auto";
+    row.appendChild(photo);
+
+    const toggleButton = document.createElement("button");
+    toggleButton.type = "button";
+    toggleButton.textContent = ad.is_active
+      ? "Deactivate Advertisement"
+      : "Activate Advertisement";
+
+    toggleButton.addEventListener("click", async () => {
+      const { error } = await ventoraSupabase
+        .from("ventora_website_ads")
+        .update({ is_active: !ad.is_active })
+        .eq("id", ad.id);
+
+      if (error) {
+        alert("Could not update advertisement: " + error.message);
+        return;
+      }
+
+      alert("Advertisement status updated.");
+      loadAdminWebsiteAds();
+    });
+
+    row.appendChild(toggleButton);
+    box.appendChild(row);
+  });
+} 
  async function loadAdminJobAdvertisements() {
   const box = document.getElementById("adminJobAdvertisements");
 
@@ -1625,6 +1725,7 @@ document.getElementById("adminDashboard").hidden = false;
       loadAdminCVs();
       loadAdminEmployers();
       loadAdminFashionProducts();
+      loadAdminWebsiteAds();
       loadAdminJobAdvertisements();
       result.textContent = "Signed in successfully. Administrator access confirmed.";
    }
@@ -1786,8 +1887,24 @@ loadSavedBusinesses();
   <h3>Manage Fashion Products</h3>
   <div id="adminFashionListings">Loading fashion products...</div>
   <button type="button" onclick="loadAdminFashionProducts()">Refresh Fashion Products</button>
-</section>
+<h3>Manage Website Advertisements</h3>
 
+<form id="websiteAdForm">
+  <p><input id="websiteAdTitle" placeholder="Advertisement title" required style="width:100%;padding:12px;"></p>
+
+  <p><input id="websiteAdImage" type="url" placeholder="Advertisement image URL" required style="width:100%;padding:12px;"></p>
+
+  <p><input id="websiteAdLink" type="url" placeholder="Destination website URL" style="width:100%;padding:12px;"></p>
+
+  <button type="submit">Add Website Advertisement</button>
+</form>
+
+<div id="websiteAdResult"></div>
+<div id="adminWebsiteAds">Loading website advertisements...</div>
+
+<button type="button" onclick="loadAdminWebsiteAds()">Refresh Website Advertisements</button>
+</section>
+  
 <section id="employerDashboard" hidden>
   <h2>VENTORA Employer Dashboard</h2>
   <h3>Job Seeker Profiles</h3>
