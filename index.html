@@ -317,6 +317,9 @@ footer a{color:#f2c45a}
   </form>
 
   <div id="jobAdvertisementResult"></div>
+
+  <h3>Available Job Opportunities</h3>
+<div id="approvedJobAdvertisements">Loading job opportunities...</div>
 </section>
  <section id="contact" class="intro"> 
 <h2>Be Part of VENTORA</h2>
@@ -1652,8 +1655,63 @@ document.getElementById("adminDashboard").hidden = false;
     );
   }).join("");
 }
+async function loadApprovedJobAdvertisements() {
+  const list = document.getElementById("approvedJobAdvertisements");
 
+  if (!list) return;
+
+  list.textContent = "Loading job opportunities...";
+
+  const { data, error } = await ventoraSupabase
+    .from("ventora_job_advertisements")
+    .select("company_name, job_title, job_description, country, is_sponsored")
+    .eq("approval_status", "approved")
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    list.textContent = "Unable to load job opportunities.";
+    return;
+  }
+
+  if (!data || data.length === 0) {
+    list.textContent = "No approved job opportunities available yet.";
+    return;
+  }
+
+  list.innerHTML = "";
+
+  data.forEach(job => {
+    const card = document.createElement("div");
+    card.className = "card";
+
+    if (job.is_sponsored) {
+      const sponsored = document.createElement("strong");
+      sponsored.textContent = "⭐ Sponsored Job";
+      card.appendChild(sponsored);
+    }
+
+    const title = document.createElement("h3");
+    title.textContent = job.job_title;
+
+    const company = document.createElement("p");
+    company.textContent = "Company: " + job.company_name;
+
+    const country = document.createElement("p");
+    country.textContent = "Country: " + job.country;
+
+    const description = document.createElement("p");
+    description.textContent = job.job_description;
+
+    card.appendChild(title);
+    card.appendChild(company);
+    card.appendChild(country);
+    card.appendChild(description);
+
+    list.appendChild(card);
+  });
+}
 loadSavedBusinesses();
+ loadApprovedJobAdvertisements(); 
 </script>
 <button type="button" id="signOutButton" hidden>Sign Out</button>
 
