@@ -205,7 +205,9 @@ footer a{color:#f2c45a}
 </nav>
 
 </header>
-
+<section id="website-advertising" style="max-width:1000px;margin:25px auto;padding:15px;text-align:center;">
+  <div id="publicWebsiteAds">Loading advertisements...</div>
+</section>
 <div class="hero">
 
 <h1>One Platform.<br>More Opportunities.</h1>
@@ -1860,6 +1862,52 @@ async function loadApprovedJobAdvertisements() {
     list.appendChild(card);
   });
 }
+ async function loadPublicWebsiteAds() {
+  const box = document.getElementById("publicWebsiteAds");
+
+  if (!box) return;
+
+  const { data, error } = await ventoraSupabase
+    .from("ventora_website_ads")
+    .select("title, image_url, destination_url")
+    .eq("is_active", true)
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    box.textContent = "Advertisements are currently unavailable.";
+    return;
+  }
+
+  if (!data || data.length === 0) {
+    box.textContent = "";
+    return;
+  }
+
+  box.innerHTML = "";
+
+  data.forEach(ad => {
+    const image = document.createElement("img");
+    image.src = ad.image_url;
+    image.alt = ad.title;
+    image.style.width = "100%";
+    image.style.maxWidth = "900px";
+    image.style.height = "auto";
+    image.style.borderRadius = "10px";
+
+    if (ad.destination_url) {
+      const link = document.createElement("a");
+      link.href = ad.destination_url;
+      link.target = "_blank";
+      link.rel = "noopener noreferrer";
+      link.appendChild(image);
+      box.appendChild(link);
+    } else {
+      box.appendChild(image);
+    }
+  });
+}
+
+loadPublicWebsiteAds(); 
 loadSavedBusinesses();
  loadApprovedJobAdvertisements(); 
 </script>
