@@ -737,7 +737,13 @@ for (const item of data) {
   card.style.marginBottom = "20px";
   card.style.maxWidth = "320px";
   card.style.backgroundColor = "#fff";
-
+if (item.is_featured) {
+  const featuredLabel = document.createElement("strong");
+  featuredLabel.textContent = "⭐ Featured Fashion";
+  featuredLabel.style.display = "block";
+  featuredLabel.style.marginBottom = "10px";
+  card.appendChild(featuredLabel);
+}
   title.textContent = item.product_name || "Unnamed product";
 
   const originalPrice =
