@@ -527,16 +527,16 @@ document.addEventListener("DOMContentLoaded", function () {
       required style="width:100%;padding:12px;box-sizing:border-box;">
   </p>
   <p>
-    <input id="jobCountry" type="text" placeholder="Your country (e.g. Ghana, United Kingdom)"
+    <input id="cvCountry" type="text" placeholder="Your country (e.g. Ghana, United Kingdom)"
       required style="width:100%;padding:12px;box-sizing:border-box;">
   </p>
   <p>
-    <input id="jobTitle" type="text" placeholder="Job you are looking for"
+    <input id="cvDesiredJob" type="text" placeholder="Job you are looking for"
       required style="width:100%;padding:12px;box-sizing:border-box;">
   </p>
 
   <p>
-    <input id="jobEmail" type="email" placeholder="Your email address"
+    <input id="cvEmail" type="email" placeholder="Your email address"
       required style="width:100%;padding:12px;box-sizing:border-box;">
   </p>
 
@@ -629,9 +629,9 @@ if (userError || !user) {
 
   const fullName = document.getElementById("jobName").value.trim();
   const phone = document.getElementById("jobPhone").value.trim();
-  const country = document.getElementById("jobCountry").value.trim();
-  const desiredJob = document.getElementById("jobTitle").value.trim();
-  const email = document.getElementById("jobEmail").value.trim();
+  const country = document.getElementById("cvCountry").value.trim();
+  const desiredJob = document.getElementById("cvDesiredJob").value.trim();
+  const email = document.getElementById("cvEmail").value.trim();
   const skills = document.getElementById("jobSkills").value.trim();
   const workExperience = document.getElementById("jobExperience").value.trim();
   const experienceStatus = document.getElementById("jobExperienceStatus").value;
@@ -1234,7 +1234,7 @@ async function loadAdminCVs() {
 
   const { data, error } = await ventoraSupabase
     .from("ventora_job_profiles")
-   .select("full_name, phone_number, desired_job, email, skills, work_experience, experience_status, skills_experience, cv_path, employer_consent")
+   .select("full_name, phone_number, country, desired_job, email, skills, work_experience, experience_status, skills_experience, cv_path, employer_consent")
 .eq("employer_consent", true)
     .order("created_at", { ascending: false });
 
