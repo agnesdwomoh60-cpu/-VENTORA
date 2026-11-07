@@ -1737,27 +1737,38 @@ document.getElementById("adminDashboard").hidden = false;
   const { data: employerRecord, error: employerError } =
     await ventoraSupabase
       .from("ventora_employers")
-      .select("user_id")
+      .select("user_id, company_name, approval_status")
       .eq("user_id", user.id)
-      .eq("approval_status", "approved")
-      .limit(1)
-    
+      .limit(1);
 
   if (employerError) {
     result.textContent = "Employer check failed: " + employerError.message;
     return;
   }
 
-  if (employerRecord && employerRecord.length > 0) {
-    document.getElementById("employerDashboard").hidden = false;
+  
+if (employerRecord && employerRecord.length > 0) {
+  const status = employerRecord[0].approval_status || "pending";
+
+  document.getElementById("employerDashboard").hidden = false;
+  document.getElementById("employer-approval-status").textContent =
+    "Registration status: " + status.toUpperCase();
+
+  if (status.toLowerCase() === "approved") {
     loadEmployerJobProfiles();
-    result.textContent = "Signed in successfully. Employer access confirmed.";
   } else {
-    document.getElementById("employerDashboard").hidden = true;
-    result.textContent = "Signed in successfully. Standard account.";
+    document.getElementById("employer-job-profiles").style.display = "none";
+  }
+
+  result.textContent = "Signed in successfully. Employer account found.";
+} else {
+  document.getElementById("employerDashboard").hidden = true;
+  result.textContent = "Signed in successfully. Standard account.";
+}
   }
 }
       
+
     }
   
 });
@@ -1956,6 +1967,7 @@ loadSavedBusinesses();
   
 <section id="employerDashboard" hidden>
   <h2>VENTORA Employer Dashboard</h2>
+  <div id="employer-approval-status"></div>
   <h3>Job Seeker Profiles</h3>
   <div id="employer-job-profiles">
     Loading job seeker profiles...
