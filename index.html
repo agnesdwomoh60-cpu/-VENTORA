@@ -1734,12 +1734,16 @@ document.getElementById("adminDashboard").hidden = false;
     else {
   document.getElementById("adminDashboard").hidden = true;
 
-  const { data: employerRecord, error: employerError } =
+    const { data: employerRecord, error: employerError } =
     await ventoraSupabase
       .from("ventora_employers")
       .select("user_id, company_name, approval_status")
-      .eq("user_id", user.id)
-      .limit(1);
+      .eq("user_id", user.id);
+    
+      
+      
+      
+      
 
   if (employerError) {
     result.textContent = "Employer check failed: " + employerError.message;
@@ -1748,15 +1752,23 @@ document.getElementById("adminDashboard").hidden = false;
 
   
 if (employerRecord && employerRecord.length > 0) {
-  const status = employerRecord[0].approval_status || "pending";
-
   document.getElementById("employerDashboard").hidden = false;
-  document.getElementById("employer-approval-status").textContent =
-  "Company: " + (employerRecord[0].company_name || "Not specified") +
-  " | Registration status: " + status.toUpperCase();
-    
 
-  if (status.toLowerCase() === "approved") {
+  const statusBox = document.getElementById("employer-approval-status");
+
+  statusBox.style.whiteSpace = "pre-line";
+
+  statusBox.textContent = employerRecord.map((item, index) =>
+    (index + 1) + ". Company: " + (item.company_name || "Not specified") +
+    " | Registration status: " + (item.approval_status || "pending").toUpperCase()
+  ).join("\n");
+
+  const hasApprovedCompany = employerRecord.some(item =>
+    (item.approval_status || "pending").toLowerCase() === "approved"
+  );
+
+  if (hasApprovedCompany) {
+    document.getElementById("employer-job-profiles").style.display = "block";
     loadEmployerJobProfiles();
   } else {
     document.getElementById("employer-job-profiles").style.display = "none";
@@ -1767,6 +1779,9 @@ if (employerRecord && employerRecord.length > 0) {
   document.getElementById("employerDashboard").hidden = true;
   result.textContent = "Signed in successfully. Standard account.";
 }
+    
+
+  
   }
 }
       
