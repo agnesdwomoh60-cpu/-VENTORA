@@ -1366,7 +1366,7 @@ async function loadEmployerJobProfiles() {
 
   const { data, error } = await ventoraSupabase
     .from("ventora_job_profiles")
-    .select("full_name, phone_number, desired_job, email, skills, work_experience, experience_status, skills_experience, cv_path")
+    .select("full_name, phone_number, country, desired_job, email, skills, work_experience, experience_status, skills_experience, cv_path")
     .eq("employer_consent", true)
     .order("created_at", { ascending: false });
 
