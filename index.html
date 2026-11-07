@@ -1752,7 +1752,9 @@ if (employerRecord && employerRecord.length > 0) {
 
   document.getElementById("employerDashboard").hidden = false;
   document.getElementById("employer-approval-status").textContent =
-    "Registration status: " + status.toUpperCase();
+  "Company: " + (employerRecord[0].company_name || "Not specified") +
+  " | Registration status: " + status.toUpperCase();
+    
 
   if (status.toLowerCase() === "approved") {
     loadEmployerJobProfiles();
