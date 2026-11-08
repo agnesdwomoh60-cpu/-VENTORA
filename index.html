@@ -1107,9 +1107,16 @@ document.addEventListener("DOMContentLoaded", function () {
   if (!signOutButton) return;
 
   async function checkLoginSession() {
-    const { data: { session } } = await ventoraSupabase.auth.getSession();
-    signOutButton.hidden = !session;
+  const { data: { session } } = await ventoraSupabase.auth.getSession();
+
+  signOutButton.hidden = !session;
+
+  if (session) {
+    await loadUserProfile(session.user);
+  } else {
+    document.getElementById("userProfileDashboard").hidden = true;
   }
+}
 
   checkLoginSession();
 
