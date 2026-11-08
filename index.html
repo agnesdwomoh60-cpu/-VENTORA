@@ -2186,7 +2186,44 @@ if (typeof loadFashionProducts === "function") {
 
   console.error("VENTORA exchange rates could not be loaded.");
 }
+async function loadUserProfile(user) {
+  const dashboard = document.getElementById("userProfileDashboard");
 
+  if (!dashboard || !user) return;
+
+  dashboard.hidden = false;
+
+  document.getElementById("profileEmail").textContent =
+    user.email || "Not available";
+
+  document.getElementById("profileCreatedAt").textContent =
+    user.created_at
+      ? new Date(user.created_at).toLocaleDateString()
+      : "Not available";
+
+  const { data, error } = await ventoraSupabase
+    .from("ventora_user_profiles")
+    .select("full_name, phone, country, profile_picture_url")
+    .eq("user_id", user.id)
+    .maybeSingle();
+
+  if (error) {
+    document.getElementById("profileMessage").textContent =
+      "Could not load profile: " + error.message;
+    return;
+  }
+
+  const profile = data || {};
+
+  document.getElementById("profileFullName").textContent =
+    profile.full_name || "Not added";
+
+  document.getElementById("profilePhone").textContent =
+    profile.phone || "Not added";
+
+  document.getElementById("profileCountry").textContent =
+    profile.country || "Not added";
+}
 document.addEventListener("DOMContentLoaded", function() {
   const selector = document.getElementById("buyerCurrency");
 
