@@ -2233,6 +2233,62 @@ async function loadUserProfile(user) {
   document.getElementById("profileCountry").textContent =
     profile.country || "Not added";
 }
+document.getElementById("editProfileButton").addEventListener("click", function () {
+  document.getElementById("profileNameInput").value =
+    document.getElementById("profileFullName").textContent === "Not added"
+      ? ""
+      : document.getElementById("profileFullName").textContent;
+
+  document.getElementById("profilePhoneInput").value =
+    document.getElementById("profilePhone").textContent === "Not added"
+      ? ""
+      : document.getElementById("profilePhone").textContent;
+
+  document.getElementById("profileCountryInput").value =
+    document.getElementById("profileCountry").textContent === "Not added"
+      ? ""
+      : document.getElementById("profileCountry").textContent;
+
+  document.getElementById("profileEditForm").hidden = false;
+});
+
+document.getElementById("cancelProfileButton").addEventListener("click", function () {
+  document.getElementById("profileEditForm").hidden = true;
+  document.getElementById("profileMessage").textContent = "";
+});
+
+document.getElementById("saveProfileButton").addEventListener("click", async function () {
+  const message = document.getElementById("profileMessage");
+  message.textContent = "Saving profile...";
+
+  const { data: { user }, error: userError } =
+    await ventoraSupabase.auth.getUser();
+
+  if (userError || !user) {
+    message.textContent = "Please sign in again.";
+    return;
+  }
+
+  const { error } = await ventoraSupabase
+    .from("ventora_user_profiles")
+    .upsert({
+      user_id: user.id,
+      full_name: document.getElementById("profileNameInput").value.trim(),
+      phone: document.getElementById("profilePhoneInput").value.trim(),
+      country: document.getElementById("profileCountryInput").value.trim(),
+      updated_at: new Date().toISOString()
+    }, { onConflict: "user_id" });
+
+  if (error) {
+    message.textContent = "Could not save profile: " + error.message;
+    return;
+  }
+
+  await loadUserProfile(user);
+
+  document.getElementById("profileEditForm").hidden = true;
+  message.textContent = "Profile saved successfully.";
+});
 document.addEventListener("DOMContentLoaded", function() {
   const selector = document.getElementById("buyerCurrency");
 
