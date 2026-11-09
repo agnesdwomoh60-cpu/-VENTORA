@@ -1130,6 +1130,7 @@ document.getElementById("accountSection").hidden = !!session;
 
   ventoraSupabase.auth.onAuthStateChange((event, session) => {
     signOutButton.hidden = !session;
+    document.getElementById("accountSection").hidden = !!session;
   });
 });  
 document.getElementById("registerAccount").addEventListener("click", async function () {
