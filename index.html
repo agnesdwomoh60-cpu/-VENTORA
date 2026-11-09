@@ -2346,6 +2346,45 @@ document.addEventListener("DOMContentLoaded", function() {
   display: none;
   margin-top: 12px;
 }
+/* VENTORA Account Welcome Screen */
+#accountSection {
+  position: fixed;
+  inset: 0;
+  z-index: 99998;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 25px;
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+
+#accountSection h2 {
+  color: #245b42;
+  text-align: center;
+}
+
+#accountSection > p {
+  text-align: center;
+  max-width: 450px;
+}
+
+#accountSection input {
+  border: 1px solid #cccccc;
+  border-radius: 6px;
+}
+
+#accountSection button {
+  background: #245b42;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 12px 20px;
+  margin: 5px;
+  cursor: pointer;
+}  
 </style>
 
 <div id="ventora-cookie-banner">
