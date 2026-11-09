@@ -1117,7 +1117,8 @@ document.addEventListener("DOMContentLoaded", function () {
   const { data: { session } } = await ventoraSupabase.auth.getSession();
 
   signOutButton.hidden = !session;
-
+document.getElementById("accountSection").hidden = !!session;
+    
   if (session) {
     await loadUserProfile(session.user);
   } else {
