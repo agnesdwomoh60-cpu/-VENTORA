@@ -1007,43 +1007,96 @@ document.addEventListener("DOMContentLoaded", function () {
 </section>
   </section>
 
-<section id="accountSection" style="padding:20px;border:1px solid #ddd;border-radius:10px;margin:20px 0;">
-  <h2>VENTORA Account</h2>
-  <p>Create an account or sign in to continue.</p>
 
-  <p>
-    <label for="accountEmail">Email address</label><br>
-    <input type="email" id="accountEmail" required
-      style="width:100%;padding:12px;box-sizing:border-box;">
-  </p>
+<section id="accountSection" style="padding:25px;">
 
-  
-<p>
-  <label for="accountPassword">Password</label><br>
-  <div style="position:relative;width:100%;">
-    <input type="password" id="accountPassword" required
-      style="width:100%;padding:12px 45px 12px 12px;box-sizing:border-box;">
+  <div style="width:100%;max-width:430px;margin:auto;">
 
-    <button type="button" id="toggleAccountPassword"
-      aria-label="Show password"
-      style="position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;color:#245b42;border:none;padding:6px;cursor:pointer;">
-      <svg id="accountPasswordEye" xmlns="http://www.w3.org/2000/svg"
-        width="22" height="22" viewBox="0 0 24 24"
-        fill="none" stroke="currentColor" stroke-width="2"
-        stroke-linecap="round" stroke-linejoin="round">
-        <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/>
-        <circle cx="12" cy="12" r="3"/>
-      </svg>
-    </button>
+    <h2 style="font-size:32px;letter-spacing:2px;margin-bottom:8px;">
+      VENTORA
+    </h2>
+
+    <p style="margin:0 auto 28px;color:#666;">
+      One Platform. More Opportunities.
+      <br>
+      Create an account or sign in to continue.
+    </p>
+
+    <div style="width:100%;text-align:left;">
+
+      <label for="accountEmail">Email address</label>
+
+      <input type="email" id="accountEmail" required
+        placeholder="Enter your email address"
+        style="width:100%;padding:14px;margin:8px 0 20px;box-sizing:border-box;border:1px solid #ccc;border-radius:7px;font-size:15px;">
+
+      <label for="accountPassword">Password</label>
+
+      <div style="position:relative;width:100%;margin-top:8px;margin-bottom:20px;">
+
+        <input type="password" id="accountPassword" required
+          placeholder="Enter your password"
+          style="width:100%;padding:14px 48px 14px 14px;box-sizing:border-box;border:1px solid #ccc;border-radius:7px;font-size:15px;">
+
+        <button type="button" id="toggleAccountPassword"
+          aria-label="Show password"
+          style="position:absolute;right:8px;top:50%;transform:translateY(-50%);background:transparent;color:#245b42;border:none;padding:7px;cursor:pointer;margin:0;">
+
+          <svg id="accountPasswordEye"
+            xmlns="http://www.w3.org/2000/svg"
+            width="22" height="22" viewBox="0 0 24 24"
+            fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/>
+            <circle cx="12" cy="12" r="3"/>
+          </svg>
+
+        </button>
+      </div>
+
+      <button type="button" id="registerAccount"
+        style="width:100%;padding:14px;margin:7px 0;border-radius:7px;font-size:15px;font-weight:bold;">
+        Create Account
+      </button>
+
+      <button type="button" id="signInAccount"
+        style="width:100%;padding:14px;margin:7px 0;border-radius:7px;font-size:15px;font-weight:bold;">
+        Sign In
+      </button>
+
+      <div style="display:flex;align-items:center;gap:12px;margin:20px 0;color:#888;">
+        <span style="flex:1;border-top:1px solid #ddd;"></span>
+        <span style="font-size:13px;">OR</span>
+        <span style="flex:1;border-top:1px solid #ddd;"></span>
+      </div>
+
+      <button type="button" id="browseAsGuest"
+        style="width:100%;padding:14px;margin:7px 0;border-radius:7px;font-size:15px;font-weight:bold;">
+        Browse as Guest
+      </button>
+
+    </div>
+
+    <p style="font-size:12px;color:#777;line-height:1.7;margin-top:22px;">
+      By continuing, you agree to VENTORA's
+      <a href="#terms-of-use" style="color:#245b42;">Terms of Service</a>
+      and acknowledge our
+      <a href="#privacy-policy" style="color:#245b42;">Privacy Policy</a>.
+    </p>
+
+    <p style="font-size:12px;margin-top:8px;">
+      <a href="#terms-of-use" style="color:#245b42;">Terms of Service</a>
+      &nbsp;·&nbsp;
+      <a href="#privacy-policy" style="color:#245b42;">Privacy Policy</a>
+      &nbsp;·&nbsp;
+      <a href="#privacy-policy" style="color:#245b42;">Cookie Policy</a>
+    </p>
+
+    <p id="accountResult" style="text-align:center;"></p>
+
   </div>
-</p>
-
-
-  <button type="button" id="registerAccount">Create Account</button>
-  <button type="button" id="signInAccount">Sign In</button>
-  <button type="button" id="browseAsGuest">Browse as Guest</button>
-  <p id="accountResult"></p>
 </section>
+
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
