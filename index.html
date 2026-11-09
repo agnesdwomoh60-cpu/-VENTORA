@@ -1957,8 +1957,8 @@ async function loadApprovedJobAdvertisements() {
 loadPublicWebsiteAds(); 
 loadSavedBusinesses();
  loadApprovedJobAdvertisements();
-  document.getElementById("browseAsGuest").addEventListener("click", function () {
-  document.getElementById("accountSection").style.display = "none";
+document.getElementById("browseAsGuest").addEventListener("click", function () {
+  document.getElementById("accountSection").hidden = true;
   window.scrollTo(0, 0);
 });
 </script>
