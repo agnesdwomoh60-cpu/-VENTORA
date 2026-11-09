@@ -1017,11 +1017,27 @@ document.addEventListener("DOMContentLoaded", function () {
       style="width:100%;padding:12px;box-sizing:border-box;">
   </p>
 
-  <p>
-    <label for="accountPassword">Password</label><br>
+  
+<p>
+  <label for="accountPassword">Password</label><br>
+  <div style="position:relative;width:100%;">
     <input type="password" id="accountPassword" required
-      style="width:100%;padding:12px;box-sizing:border-box;">
-  </p>
+      style="width:100%;padding:12px 45px 12px 12px;box-sizing:border-box;">
+
+    <button type="button" id="toggleAccountPassword"
+      aria-label="Show password"
+      style="position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;color:#245b42;border:none;padding:6px;cursor:pointer;">
+      <svg id="accountPasswordEye" xmlns="http://www.w3.org/2000/svg"
+        width="22" height="22" viewBox="0 0 24 24"
+        fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round">
+        <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/>
+        <circle cx="12" cy="12" r="3"/>
+      </svg>
+    </button>
+  </div>
+</p>
+
 
   <button type="button" id="registerAccount">Create Account</button>
   <button type="button" id="signInAccount">Sign In</button>
