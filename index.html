@@ -2338,6 +2338,15 @@ async function loadUserProfile(user) {
 
   document.getElementById("profileCountry").textContent =
     profile.country || "Not added";
+  const picture = document.getElementById("profilePicture");
+
+  if (profile.profile_picture_url) {
+    picture.src = profile.profile_picture_url;
+    picture.hidden = false;
+  } else {
+    picture.src = "";
+    picture.hidden = true;
+  }
 }
 document.getElementById("editProfileButton").addEventListener("click", function () {
   document.getElementById("profileNameInput").value =
