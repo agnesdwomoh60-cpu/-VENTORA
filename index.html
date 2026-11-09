@@ -1727,6 +1727,7 @@ row.appendChild(sponsoredButton);
     ? error.message
     : "Signed in successfully.";
   if (!error) {
+    document.getElementById("accountSection").hidden = true;
     document.getElementById("signOutButton").hidden = false;
     const { data: { user } } = await ventoraSupabase.auth.getUser();
     await loadUserProfile(user);
