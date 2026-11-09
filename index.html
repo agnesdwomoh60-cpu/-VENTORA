@@ -1956,7 +1956,11 @@ async function loadApprovedJobAdvertisements() {
 
 loadPublicWebsiteAds(); 
 loadSavedBusinesses();
- loadApprovedJobAdvertisements(); 
+ loadApprovedJobAdvertisements();
+  document.getElementById("browseAsGuest").addEventListener("click", function () {
+  document.getElementById("accountSection").style.display = "none";
+  window.scrollTo(0, 0);
+});
 </script>
   <section id="userProfileDashboard" hidden
   style="padding:20px;border:1px solid #ddd;border-radius:10px;margin:20px 0;">
