@@ -391,7 +391,9 @@ const businessLocation = document.getElementById("businessLocation").value.trim(
   const { error } = await ventoraSupabase
     .from("ventora_business_listings")
     .insert({
+  user_id: user.id,
   business_name: businessName,
+  
   phone: businessContact,
   description: businessDescription,
   location: businessLocation,
