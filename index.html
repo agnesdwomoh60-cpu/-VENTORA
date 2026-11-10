@@ -2060,12 +2060,16 @@ document.getElementById("toggleAccountPassword").addEventListener("click", funct
 
   <h2>My VENTORA Profile</h2>
 
-  <div>
+    <div>
     <img id="profilePicture"
       src=""
       alt="Profile picture"
       hidden
       style="width:110px;height:110px;border-radius:50%;object-fit:cover;">
+
+    <button type="button" id="removeProfilePictureButton" hidden>
+      Remove Profile Picture
+    </button>
   </div>
 
   <p id="profileAccountStatus">Account status: Signed in</p>
