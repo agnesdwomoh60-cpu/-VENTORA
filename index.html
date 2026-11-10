@@ -2342,7 +2342,9 @@ async function loadUserProfile(user) {
 
   document.getElementById("profileCountry").textContent =
     profile.country || "Not added";
-    const picture = document.getElementById("profilePicture");
+      const picture = document.getElementById("profilePicture");
+  const removeButton =
+    document.getElementById("removeProfilePictureButton");
 
   if (profile.profile_picture_url) {
     const { data: pictureData, error: pictureError } =
@@ -2353,13 +2355,16 @@ async function loadUserProfile(user) {
     if (!pictureError && pictureData) {
       picture.src = pictureData.signedUrl;
       picture.hidden = false;
+      removeButton.hidden = false;
     } else {
       picture.src = "";
       picture.hidden = true;
+      removeButton.hidden = true;
     }
   } else {
     picture.src = "";
     picture.hidden = true;
+    removeButton.hidden = true;
   }
 }
 document.getElementById("editProfileButton").addEventListener("click", function () {
