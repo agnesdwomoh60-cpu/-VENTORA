@@ -2408,6 +2408,48 @@ async function loadMyBusinessSubmissions(user) {
     item.appendChild(details);
     container.appendChild(item);
   });
+}
+ async function loadMyFashionSubmissions(user) {
+  const container = document.getElementById("myFashionSubmissions");
+
+  container.textContent = "Loading your fashion listings...";
+
+  const { data, error } = await ventoraSupabase
+    .from("fashion_listings")
+    .select("id, created_at, product_name, category, price, currency, country")
+    .eq("user_id", user.id)
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    container.textContent =
+      "Could not load your fashion listings: " + error.message;
+    return;
+  }
+
+  container.replaceChildren();
+
+  if (!data || data.length === 0) {
+    container.textContent = "You have not submitted any fashion listings yet.";
+    return;
+  }
+
+  data.forEach(function (product) {
+    const item = document.createElement("div");
+    const name = document.createElement("strong");
+    const details = document.createElement("p");
+
+    name.textContent = product.product_name || "Unnamed product";
+    details.textContent =
+      (product.category || "Category not specified") +
+      " | " +
+      (product.price === null ? "Price not specified" : product.currency + " " + product.price) +
+      " | " +
+      (product.country || "Country not specified");
+
+    item.appendChild(name);
+    item.appendChild(details);
+    container.appendChild(item);
+  });
 } 
 async function loadUserProfile(user) {
   const dashboard = document.getElementById("userProfileDashboard");
@@ -2417,6 +2459,8 @@ async function loadUserProfile(user) {
   dashboard.hidden = false;
 loadMyBusinessSubmissions(user);
   loadMyJobSubmissions(user);
+loadMyFashionSubmissions(user);
+  
   document.getElementById("profileEmail").textContent =
     user.email || "Not available";
 
