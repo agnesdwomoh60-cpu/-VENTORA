@@ -2367,6 +2367,59 @@ async function loadUserProfile(user) {
     removeButton.hidden = true;
   }
 }
+ document.getElementById("removeProfilePictureButton").addEventListener("click", async function () {
+  const message = document.getElementById("profileMessage");
+  message.textContent = "Removing profile picture...";
+
+  const { data: { user }, error: userError } =
+    await ventoraSupabase.auth.getUser();
+
+  if (userError || !user) {
+    message.textContent = "Please sign in again.";
+    return;
+  }
+
+  const { data: profile, error: profileError } =
+    await ventoraSupabase
+      .from("ventora_user_profiles")
+      .select("profile_picture_url")
+      .eq("user_id", user.id)
+      .maybeSingle();
+
+  if (profileError) {
+    message.textContent = "Could not find your profile picture.";
+    return;
+  }
+
+  if (!profile || !profile.profile_picture_url) {
+    message.textContent = "No profile picture to remove.";
+    return;
+  }
+
+  const { error: deleteError } = await ventoraSupabase.storage
+    .from("ventora-profile-pictures")
+    .remove([profile.profile_picture_url]);
+
+  if (deleteError) {
+    message.textContent = "Could not remove picture: " + deleteError.message;
+    return;
+  }
+
+  const { error: updateError } = await ventoraSupabase
+    .from("ventora_user_profiles")
+    .update({ profile_picture_url: null })
+    .eq("user_id", user.id);
+
+  if (updateError) {
+    message.textContent =
+      "Picture removed from storage, but profile could not be updated: " +
+      updateError.message;
+    return;
+  }
+
+  await loadUserProfile(user);
+  message.textContent = "Profile picture removed successfully.";
+}); 
 document.getElementById("editProfileButton").addEventListener("click", function () {
   document.getElementById("profileNameInput").value =
     document.getElementById("profileFullName").textContent === "Not added"
