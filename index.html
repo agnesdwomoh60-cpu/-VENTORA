@@ -2338,11 +2338,21 @@ async function loadUserProfile(user) {
 
   document.getElementById("profileCountry").textContent =
     profile.country || "Not added";
-  const picture = document.getElementById("profilePicture");
+    const picture = document.getElementById("profilePicture");
 
   if (profile.profile_picture_url) {
-    picture.src = profile.profile_picture_url;
-    picture.hidden = false;
+    const { data: pictureData, error: pictureError } =
+      await ventoraSupabase.storage
+        .from("ventora-profile-pictures")
+        .createSignedUrl(profile.profile_picture_url, 3600);
+
+    if (!pictureError && pictureData) {
+      picture.src = pictureData.signedUrl;
+      picture.hidden = false;
+    } else {
+      picture.src = "";
+      picture.hidden = true;
+    }
   } else {
     picture.src = "";
     picture.hidden = true;
@@ -2384,15 +2394,52 @@ document.getElementById("saveProfileButton").addEventListener("click", async fun
     return;
   }
 
+  const selectedPicture =
+    document.getElementById("profilePictureInput").files[0];
+
+  const profileData = {
+    user_id: user.id,
+    full_name: document.getElementById("profileNameInput").value.trim(),
+    phone: document.getElementById("profilePhoneInput").value.trim(),
+    country: document.getElementById("profileCountryInput").value.trim(),
+    updated_at: new Date().toISOString()
+  };
+
+  if (selectedPicture) {
+    const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
+
+    if (!allowedTypes.includes(selectedPicture.type)) {
+      message.textContent = "Please choose a JPG, PNG or WebP image.";
+      return;
+    }
+
+    const extension = selectedPicture.type === "image/png"
+      ? "png"
+      : selectedPicture.type === "image/webp"
+        ? "webp"
+        : "jpg";
+
+    const picturePath = user.id + "/" + Date.now() + "." + extension;
+
+    const { error: uploadError } = await ventoraSupabase.storage
+      .from("ventora-profile-pictures")
+      .upload(picturePath, selectedPicture, {
+        contentType: selectedPicture.type,
+        upsert: false
+      });
+
+    if (uploadError) {
+      message.textContent =
+        "Could not upload picture: " + uploadError.message;
+      return;
+    }
+
+    profileData.profile_picture_url = picturePath;
+  }
+
   const { error } = await ventoraSupabase
     .from("ventora_user_profiles")
-    .upsert({
-      user_id: user.id,
-      full_name: document.getElementById("profileNameInput").value.trim(),
-      phone: document.getElementById("profilePhoneInput").value.trim(),
-      country: document.getElementById("profileCountryInput").value.trim(),
-      updated_at: new Date().toISOString()
-    }, { onConflict: "user_id" });
+    .upsert(profileData, { onConflict: "user_id" });
 
   if (error) {
     message.textContent = "Could not save profile: " + error.message;
@@ -2402,6 +2449,7 @@ document.getElementById("saveProfileButton").addEventListener("click", async fun
   await loadUserProfile(user);
 
   document.getElementById("profileEditForm").hidden = true;
+  document.getElementById("profilePictureInput").value = "";
   message.textContent = "Profile saved successfully.";
 });
 document.addEventListener("DOMContentLoaded", function() {
