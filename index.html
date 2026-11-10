@@ -2327,13 +2327,52 @@ if (typeof loadFashionProducts === "function") {
 
   console.error("VENTORA exchange rates could not be loaded.");
 }
+async function loadMyBusinessSubmissions(user) {
+  const container = document.getElementById("myBusinessSubmissions");
+
+  container.textContent = "Loading your business listings...";
+
+  const { data, error } = await ventoraSupabase
+    .from("ventora_business_listings")
+    .select("id, created_at, business_name, location, country")
+    .eq("user_id", user.id)
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    container.textContent =
+      "Could not load your business listings: " + error.message;
+    return;
+  }
+
+  container.replaceChildren();
+
+  if (!data || data.length === 0) {
+    container.textContent = "You have not submitted any business listings yet.";
+    return;
+  }
+
+  data.forEach(function (listing) {
+    const item = document.createElement("div");
+    const name = document.createElement("strong");
+    const details = document.createElement("p");
+
+    name.textContent = listing.business_name || "Unnamed business";
+    details.textContent =
+      (listing.location || "") +
+      (listing.country ? ", " + listing.country : "");
+
+    item.appendChild(name);
+    item.appendChild(details);
+    container.appendChild(item);
+  });
+}
 async function loadUserProfile(user) {
   const dashboard = document.getElementById("userProfileDashboard");
 
   if (!dashboard || !user) return;
 
   dashboard.hidden = false;
-
+loadMyBusinessSubmissions(user);
   document.getElementById("profileEmail").textContent =
     user.email || "Not available";
 
