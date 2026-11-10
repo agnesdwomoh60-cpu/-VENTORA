@@ -2366,6 +2366,48 @@ async function loadMyBusinessSubmissions(user) {
     container.appendChild(item);
   });
 }
+ async function loadMyJobSubmissions(user) {
+  const container = document.getElementById("myJobSubmissions");
+
+  container.textContent = "Loading your job profiles and CVs...";
+
+  const { data, error } = await ventoraSupabase
+    .from("ventora_job_profiles")
+    .select("id, created_at, full_name, desired_job, country, experience_status")
+    .eq("user_id", user.id)
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    container.textContent =
+      "Could not load your job profiles: " + error.message;
+    return;
+  }
+
+  container.replaceChildren();
+
+  if (!data || data.length === 0) {
+    container.textContent = "You have not submitted any job profiles or CVs yet.";
+    return;
+  }
+
+  data.forEach(function (profile) {
+    const item = document.createElement("div");
+    const name = document.createElement("strong");
+    const details = document.createElement("p");
+
+    name.textContent = profile.full_name || "Unnamed applicant";
+    details.textContent =
+      (profile.desired_job || "Job not specified") +
+      " | " +
+      (profile.country || "Country not specified") +
+      " | " +
+      (profile.experience_status || "Experience not specified");
+
+    item.appendChild(name);
+    item.appendChild(details);
+    container.appendChild(item);
+  });
+} 
 async function loadUserProfile(user) {
   const dashboard = document.getElementById("userProfileDashboard");
 
@@ -2373,6 +2415,7 @@ async function loadUserProfile(user) {
 
   dashboard.hidden = false;
 loadMyBusinessSubmissions(user);
+  loadMyJobSubmissions(user);
   document.getElementById("profileEmail").textContent =
     user.email || "Not available";
 
