@@ -319,14 +319,14 @@ footer a{color:#f2c45a}
 </div>
 
 <div>
-
+<a href="#" id="homeNavigationLink">Home</a>
 <a href="#business">Business</a>
 
 <a href="#jobs">Jobs & CVs</a>
 
 <a href="#fashion">African Fashion</a>
 </div>
-  
+ 
 <div>
   <label for="buyerCurrency">Display prices in:</label>
   <select id="buyerCurrency">
@@ -2898,7 +2898,15 @@ document.getElementById("profileMenuButton").addEventListener("click", async fun
 
   dashboard.hidden = false;
   window.scrollTo(0, 0);
-});  
+});
+ document.getElementById("homeNavigationLink").addEventListener("click", function(event) {
+  event.preventDefault();
+
+  document.getElementById("homePageContent").hidden = false;
+  document.getElementById("userProfileDashboard").hidden = true;
+
+  window.scrollTo(0, 0);
+}); 
 </script>
 
 <style>
