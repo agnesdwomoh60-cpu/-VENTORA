@@ -76,7 +76,104 @@ nav a {
 .profile-menu-icon {
   font-size: 18px;
 }
-  
+/* VENTORA PROFILE DASHBOARD */
+
+#userProfileDashboard {
+  max-width: 1200px;
+  margin: 30px auto;
+  padding: 20px;
+  border: none;
+  background: #ffffff;
+  border-radius: 12px;
+}
+
+.profile-dashboard-banner {
+  background: #245b42;
+  color: #ffffff;
+  padding: 25px;
+  border-radius: 10px;
+  margin-bottom: 25px;
+}
+
+.profile-dashboard-layout {
+  display: grid;
+  grid-template-columns: 250px 1fr;
+  gap: 25px;
+  align-items: start;
+}
+
+.profile-sidebar {
+  background: #f6f8f5;
+  border: 1px solid #e5ebe6;
+  border-radius: 10px;
+  padding: 20px;
+}
+
+.profile-sidebar h3 {
+  color: #245b42;
+  margin-top: 0;
+}
+
+.profile-sidebar a,
+.profile-sidebar button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 11px;
+  margin: 5px 0;
+  color: #245b42;
+  background: #ffffff;
+  border: 1px solid #e5ebe6;
+  border-radius: 7px;
+  text-decoration: none;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.profile-sidebar a:hover,
+.profile-sidebar button:hover {
+  background: #e8f1eb;
+}
+
+.profile-information-card {
+  background: #ffffff;
+  border: 1px solid #e5ebe6;
+  border-radius: 10px;
+  padding: 25px;
+  margin-bottom: 25px;
+}
+
+.profile-submissions-panel {
+  background: #edf5ef;
+  padding: 25px;
+  border-radius: 10px;
+}
+
+.profile-submission-card {
+  background: #ffffff;
+  border: 1px solid #e0e9e2;
+  border-radius: 9px;
+  padding: 18px;
+  margin-top: 15px;
+}
+
+#profilePicture {
+  width: 110px;
+  height: 110px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+@media (max-width: 700px) {
+  .profile-dashboard-layout {
+    grid-template-columns: 1fr;
+  }
+
+  #userProfileDashboard {
+    padding: 12px;
+    margin: 15px auto;
+  }
+}  
   
   
   
