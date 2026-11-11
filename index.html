@@ -2255,7 +2255,9 @@ document.getElementById("toggleAccountPassword").addEventListener("click", funct
       <a href="#myFashionSubmissions">My African Fashion Listings</a>
 
       <button type="button" disabled>Subscription / Promotions</button>
-      <button type="button" disabled>Settings</button>
+      <button type="button" id="settingsNavigationButton">
+  Settings
+</button>
 
       <button type="button" id="signOutButton" hidden>
         Sign Out
@@ -2362,7 +2364,37 @@ document.getElementById("toggleAccountPassword").addEventListener("click", funct
           </div>
         </div>
       </div>
+      <div id="userSettingsSection" class="profile-information-card" hidden>
+        <h3>Account Settings</h3>
 
+        <h4>Personal Information</h4>
+        <p>Update your name, phone number, country and profile picture.</p>
+
+        <button type="button" id="settingsEditProfileButton">
+          Edit Personal Information
+        </button>
+
+        <hr>
+
+        <h4>Account Security</h4>
+        <p>Change your account password.</p>
+
+        <p>
+          <label for="settingsNewPassword">New password</label><br>
+          <input type="password" id="settingsNewPassword">
+        </p>
+
+        <p>
+          <label for="settingsConfirmPassword">Confirm new password</label><br>
+          <input type="password" id="settingsConfirmPassword">
+        </p>
+
+        <button type="button" id="settingsChangePasswordButton">
+          Update Password
+        </button>
+
+        <p id="settingsMessage"></p>
+      </div>
     </div>
   </div>
 </section>
@@ -2904,6 +2936,7 @@ document.addEventListener("DOMContentLoaded", function() {
     loadVentoraCurrencyRates();
   });
 });
+
 document.getElementById("profileMenuButton").addEventListener("click", async function() {
   const { data: { user }, error } = await ventoraSupabase.auth.getUser();
 
@@ -2922,7 +2955,8 @@ document.getElementById("profileMenuButton").addEventListener("click", async fun
   document.getElementById("profileDashboardBackdrop").hidden = false;
   document.getElementById("userProfileDashboard").hidden = false;
 });
- document.getElementById("homeNavigationLink").addEventListener("click", function(event) {
+
+document.getElementById("homeNavigationLink").addEventListener("click", function(event) {
   event.preventDefault();
 
   document.getElementById("homePageContent").hidden = false;
@@ -2930,11 +2964,19 @@ document.getElementById("profileMenuButton").addEventListener("click", async fun
   document.getElementById("profileDashboardBackdrop").hidden = true;
   window.scrollTo(0, 0);
 });
+
 document.getElementById("closeProfileDashboardButton").addEventListener("click", function() {
   document.getElementById("userProfileDashboard").hidden = true;
   document.getElementById("profileDashboardBackdrop").hidden = true;
-});  
+});
+
+document.getElementById("settingsNavigationButton").addEventListener("click", function() {
+  document.getElementById("accountInformation").hidden = true;
+  document.getElementById("mySubmissionsSection").hidden = true;
+  document.getElementById("userSettingsSection").hidden = false;
+});
 </script>
+
 
 <style>
 #ventora-cookie-banner {
