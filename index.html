@@ -639,7 +639,7 @@ document.addEventListener("DOMContentLoaded", function () {
       alert("Sign out failed: " + error.message);
       return;
     }
-
+document.getElementById("homePageContent").hidden = false;
     document.getElementById("adminDashboard").hidden = true;
     document.getElementById("employerDashboard").hidden = true;
     document.getElementById("userProfileDashboard").hidden = true;
