@@ -21,9 +21,22 @@
 
 body{margin:0;font-family:Arial,sans-serif;color:#202b25;background:#f6f8f5;line-height:1.6}
 
-header{background:#245b42;color:white;padding:22px 18px}
+header {
+  background: #ffffff;
+  color: #245b42;
+  padding: 12px 20px;
+  border-bottom: 1px solid #e5ebe6;
+}
 
-nav{max-width:1050px;margin:auto;display:flex;justify-content:space-between;align-items:center;gap:15px;flex-wrap:wrap}
+nav {
+  max-width: 1200px;
+  margin: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
 
 .logo {
   display: flex;
@@ -31,11 +44,37 @@ nav{max-width:1050px;margin:auto;display:flex;justify-content:space-between;alig
 }
 
 .logo img {
-  width: 420px;
+  width: 190px;
   max-width: 100%;
   height: auto;
   object-fit: contain;
   display: block;
+}
+
+nav a {
+  color: #245b42;
+  text-decoration: none;
+  margin: 5px 8px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.profile-menu-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #245b42;
+  color: white;
+  border: none;
+  border-radius: 25px;
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.profile-menu-icon {
+  font-size: 18px;
 }
   
   
@@ -189,8 +228,8 @@ footer a{color:#f2c45a}
 <a href="#jobs">Jobs & CVs</a>
 
 <a href="#fashion">African Fashion</a>
-
 </div>
+  
 <div>
   <label for="buyerCurrency">Display prices in:</label>
   <select id="buyerCurrency">
@@ -203,6 +242,14 @@ footer a{color:#f2c45a}
     <option value="ZAR">ZAR</option>
   </select>
 </div>
+   
+
+<button type="button" id="profileMenuButton" class="profile-menu-button">
+  <span class="profile-menu-icon">👤</span>
+  <span>My Profile</span>
+</button>
+
+ 
 </nav>
 
 </header>
