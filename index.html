@@ -2202,86 +2202,139 @@ document.getElementById("toggleAccountPassword").addEventListener("click", funct
   }
 });
 
+
 </script>
    </main>
-  <section id="userProfileDashboard" hidden
-  style="padding:20px;border:1px solid #ddd;border-radius:10px;margin:20px 0;">
+  
+<section id="userProfileDashboard" hidden>
 
-  <h2>My VENTORA Profile</h2>
-
-    <div>
-    <img id="profilePicture"
-      src=""
-      alt="Profile picture"
-      hidden
-      style="width:110px;height:110px;border-radius:50%;object-fit:cover;">
-
-    <button type="button" id="removeProfilePictureButton" hidden>
-      Remove Profile Picture
-    </button>
+  <div class="profile-dashboard-banner">
+    <h2>My VENTORA Profile</h2>
+    <p>Manage your account and your VENTORA activities.</p>
   </div>
 
-  <p id="profileAccountStatus">Account status: Signed in</p>
+  <div class="profile-dashboard-layout">
 
-  <p><strong>Full name:</strong> <span id="profileFullName">Not added</span></p>
-  <p><strong>Email:</strong> <span id="profileEmail"></span></p>
-  <p><strong>Phone:</strong> <span id="profilePhone">Not added</span></p>
-  <p><strong>Country:</strong> <span id="profileCountry">Not added</span></p>
-  <p><strong>Account created:</strong> <span id="profileCreatedAt">Not available</span></p>
+    <aside class="profile-sidebar">
+      <h3>My Account</h3>
 
-  <button type="button" id="editProfileButton">Edit Profile</button>
+      <a href="#accountInformation">My VENTORA Profile</a>
+      <a href="#myBusinessSubmissions">My Business Listings</a>
+      <a href="#myJobSubmissions">My Job Profiles &amp; CVs</a>
+      <a href="#myFashionSubmissions">My African Fashion Listings</a>
 
-  <div id="profileEditForm" hidden>
-    <h3>Edit My Profile</h3>
+      <button type="button" disabled>Subscription / Promotions</button>
+      <button type="button" disabled>Settings</button>
 
-    <p>
-      <label for="profileNameInput">Full name</label><br>
-      <input type="text" id="profileNameInput">
-    </p>
+      <button type="button" id="signOutButton" hidden>
+        Sign Out
+      </button>
+    </aside>
 
-    <p>
-      <label for="profilePhoneInput">Phone number</label><br>
-      <input type="tel" id="profilePhoneInput">
-    </p>
+    <div class="profile-dashboard-content">
 
-    <p>
-      <label for="profileCountryInput">Country</label><br>
-      <input type="text" id="profileCountryInput">
-    </p>
+      <div id="accountInformation" class="profile-information-card">
+        <h3>Account Information</h3>
 
-    <p>
-      <label for="profilePictureInput">Profile picture</label><br>
-      <input type="file" id="profilePictureInput"
-        accept="image/jpeg,image/png,image/webp">
-    </p>
+        <img id="profilePicture"
+          src=""
+          alt="Profile picture"
+          hidden>
 
-    <button type="button" id="saveProfileButton">Save Profile</button>
-    <button type="button" id="cancelProfileButton">Cancel</button>
+        <button type="button" id="removeProfilePictureButton" hidden>
+          Remove Profile Picture
+        </button>
 
-    <p id="profileMessage"></p>
+        <p id="profileAccountStatus">Account status: Signed in</p>
+
+        <p><strong>Full name:</strong>
+          <span id="profileFullName">Not added</span>
+        </p>
+
+        <p><strong>Email:</strong>
+          <span id="profileEmail"></span>
+        </p>
+
+        <p><strong>Phone:</strong>
+          <span id="profilePhone">Not added</span>
+        </p>
+
+        <p><strong>Country:</strong>
+          <span id="profileCountry">Not added</span>
+        </p>
+
+        <p><strong>Account created:</strong>
+          <span id="profileCreatedAt">Not available</span>
+        </p>
+
+        <button type="button" id="editProfileButton">
+          Edit Profile
+        </button>
+
+        <div id="profileEditForm" hidden>
+          <h3>Edit My Profile</h3>
+
+          <p>
+            <label for="profileNameInput">Full name</label><br>
+            <input type="text" id="profileNameInput">
+          </p>
+
+          <p>
+            <label for="profilePhoneInput">Phone number</label><br>
+            <input type="tel" id="profilePhoneInput">
+          </p>
+
+          <p>
+            <label for="profileCountryInput">Country</label><br>
+            <input type="text" id="profileCountryInput">
+          </p>
+
+          <p>
+            <label for="profilePictureInput">Profile picture</label><br>
+            <input type="file" id="profilePictureInput"
+              accept="image/jpeg,image/png,image/webp">
+          </p>
+
+          <button type="button" id="saveProfileButton">
+            Save Profile
+          </button>
+
+          <button type="button" id="cancelProfileButton">
+            Cancel
+          </button>
+
+          <p id="profileMessage"></p>
+        </div>
+      </div>
+
+      <div id="mySubmissionsSection" class="profile-submissions-panel">
+        <h3>My Submissions</h3>
+
+        <div class="profile-submission-card">
+          <h4>My Business Listings</h4>
+          <div id="myBusinessSubmissions">
+            Loading business listings...
+          </div>
+        </div>
+
+        <div class="profile-submission-card">
+          <h4>My Job Profiles &amp; CVs</h4>
+          <div id="myJobSubmissions">
+            Loading job profiles...
+          </div>
+        </div>
+
+        <div class="profile-submission-card">
+          <h4>My African Fashion Listings</h4>
+          <div id="myFashionSubmissions">
+            Loading fashion listings...
+          </div>
+        </div>
+      </div>
+
+    </div>
   </div>
-   <hr style="margin:25px 0;">
-
-  <div id="mySubmissionsSection">
-    <h3>My Submissions</h3>
-
-    <h4>My Business Listings</h4>
-    <div id="myBusinessSubmissions">
-      Loading business listings...
-    </div>
-
-    <h4>My Job Profiles & CVs</h4>
-    <div id="myJobSubmissions">
-      Loading job profiles...
-    </div>
-
-    <h4>My African Fashion Listings</h4>
-    <div id="myFashionSubmissions">
-      Loading fashion listings...
-    </div>
-  </div>   
 </section>
-<button type="button" id="signOutButton" hidden>Sign Out</button>
 
 <section id="adminDashboard" hidden>
   <h2>VENTORA Admin Dashboard</h2>
