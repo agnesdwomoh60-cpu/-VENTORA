@@ -2254,7 +2254,9 @@ document.getElementById("toggleAccountPassword").addEventListener("click", funct
       <a href="#myJobSubmissions">My Job Profiles &amp; CVs</a>
       <a href="#myFashionSubmissions">My African Fashion Listings</a>
 
-      <button type="button" disabled>Subscription / Promotions</button>
+      <button type="button" id="subscriptionPromotionsButton">
+  Subscription / Promotions
+</button>
       <button type="button" id="settingsNavigationButton">
   Settings
 </button>
@@ -2395,6 +2397,35 @@ document.getElementById("toggleAccountPassword").addEventListener("click", funct
 
         <p id="settingsMessage"></p>
       </div>
+      
+      <div id="subscriptionPromotionsSection" class="profile-information-card" hidden>
+        <h3>Subscription / Promotions</h3>
+        <p>View and manage promotions for your VENTORA listings and advertisements.</p>
+
+        <hr>
+
+        <h4>Business Listing Promotions</h4>
+        <div id="myBusinessPromotions">
+          Your business promotion information will appear here.
+        </div>
+
+        <hr>
+
+        <h4>Sponsored Job Advertisements</h4>
+        <div id="myJobPromotions">
+          Your sponsored job advertisement information will appear here.
+        </div>
+
+        <hr>
+
+        <h4>African Fashion Promotions</h4>
+        <div id="myFashionPromotions">
+          Your fashion promotion information will appear here.
+        </div>
+
+        <p>Promotion payment and purchase options will be added when VENTORA payment setup is ready.</p>
+      </div>
+
     </div>
   </div>
 </section>
@@ -3031,7 +3062,14 @@ document.getElementById("settingsChangePasswordButton").addEventListener("click"
   document.getElementById("settingsNewPassword").value = "";
   document.getElementById("settingsConfirmPassword").value = "";
 });
-  
+ 
+document.getElementById("subscriptionPromotionsButton").addEventListener("click", function() {
+  document.getElementById("accountInformation").hidden = true;
+  document.getElementById("mySubmissionsSection").hidden = true;
+  document.getElementById("userSettingsSection").hidden = true;
+  document.getElementById("subscriptionPromotionsSection").hidden = false;
+});
+ 
 </script>
 
 
