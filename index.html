@@ -77,16 +77,45 @@ nav a {
   font-size: 18px;
 }
 /* VENTORA PROFILE DASHBOARD */
-
+#profileDashboardBackdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.35);
+  z-index: 1000;
+}
 #userProfileDashboard {
-  max-width: 1200px;
-  margin: 30px auto;
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 650px;
+  max-width: 95%;
+  height: 100vh;
+  margin: 0;
   padding: 20px;
   border: none;
   background: #ffffff;
-  border-radius: 12px;
+  border-radius: 12px 0 0 12px;
+  overflow-y: auto;
+  z-index: 1001;
+  box-shadow: -8px 0 25px rgba(0, 0, 0, 0.15);
 }
-
+#closeProfileDashboardButton {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  width: 38px;
+  height: 38px;
+  border: none;
+  border-radius: 50%;
+  background: #ffffff;
+  color: #245b42;
+  font-size: 28px;
+  cursor: pointer;
+  z-index: 2;
+}
 .profile-dashboard-banner {
   background: #245b42;
   color: #ffffff;
@@ -2205,9 +2234,11 @@ document.getElementById("toggleAccountPassword").addEventListener("click", funct
 
 </script>
    </main>
-  
+  <div id="profileDashboardBackdrop" hidden></div>
 <section id="userProfileDashboard" hidden>
-
+  <button type="button" id="closeProfileDashboardButton" aria-label="Close profile">
+    &times;
+  </button>
   <div class="profile-dashboard-banner">
     <h2>My VENTORA Profile</h2>
     <p>Manage your account and your VENTORA activities.</p>
@@ -2877,10 +2908,7 @@ document.getElementById("profileMenuButton").addEventListener("click", async fun
   const { data: { user }, error } = await ventoraSupabase.auth.getUser();
 
   if (error || !user) {
-    const homePage = document.getElementById("homePageContent");
     const accountSection = document.getElementById("accountSection");
-
-    homePage.hidden = false;
 
     if (accountSection) {
       accountSection.hidden = false;
@@ -2889,24 +2917,23 @@ document.getElementById("profileMenuButton").addEventListener("click", async fun
     return;
   }
 
-  const homePage = document.getElementById("homePageContent");
-  const dashboard = document.getElementById("userProfileDashboard");
-
-  homePage.hidden = true;
-
   await loadUserProfile(user);
 
-  dashboard.hidden = false;
-  window.scrollTo(0, 0);
+  document.getElementById("profileDashboardBackdrop").hidden = false;
+  document.getElementById("userProfileDashboard").hidden = false;
 });
  document.getElementById("homeNavigationLink").addEventListener("click", function(event) {
   event.preventDefault();
 
   document.getElementById("homePageContent").hidden = false;
   document.getElementById("userProfileDashboard").hidden = true;
-
+  document.getElementById("profileDashboardBackdrop").hidden = true;
   window.scrollTo(0, 0);
-}); 
+});
+document.getElementById("closeProfileDashboardButton").addEventListener("click", function() {
+  document.getElementById("userProfileDashboard").hidden = true;
+  document.getElementById("profileDashboardBackdrop").hidden = true;
+});  
 </script>
 
 <style>
