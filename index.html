@@ -2979,7 +2979,23 @@ document.getElementById("settingsEditProfileButton").addEventListener("click", f
   document.getElementById("userSettingsSection").hidden = true;
   document.getElementById("mySubmissionsSection").hidden = true;
   document.getElementById("accountInformation").hidden = false;
-  document.getElementById("editProfileButton").click();
+
+  document.getElementById("profileNameInput").value =
+    document.getElementById("profileFullName").textContent === "Not added"
+      ? ""
+      : document.getElementById("profileFullName").textContent;
+
+  document.getElementById("profilePhoneInput").value =
+    document.getElementById("profilePhone").textContent === "Not added"
+      ? ""
+      : document.getElementById("profilePhone").textContent;
+
+  document.getElementById("profileCountryInput").value =
+    document.getElementById("profileCountry").textContent === "Not added"
+      ? ""
+      : document.getElementById("profileCountry").textContent;
+
+  document.getElementById("profileEditForm").hidden = false;
 });  
 </script>
 
