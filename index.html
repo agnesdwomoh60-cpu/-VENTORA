@@ -2996,7 +2996,42 @@ document.getElementById("settingsEditProfileButton").addEventListener("click", f
       : document.getElementById("profileCountry").textContent;
 
   document.getElementById("profileEditForm").hidden = false;
-});  
+});
+
+document.getElementById("settingsChangePasswordButton").addEventListener("click", async function() {
+  const newPassword = document.getElementById("settingsNewPassword").value;
+  const confirmPassword = document.getElementById("settingsConfirmPassword").value;
+  const message = document.getElementById("settingsMessage");
+
+  message.textContent = "";
+
+  if (!newPassword || !confirmPassword) {
+    message.textContent = "Please fill in both password fields.";
+    return;
+  }
+
+  if (newPassword !== confirmPassword) {
+    message.textContent = "The passwords do not match.";
+    return;
+  }
+
+  message.textContent = "Updating password...";
+
+  const { error } = await ventoraSupabase.auth.updateUser({
+    password: newPassword
+  });
+
+  if (error) {
+    message.textContent = "Password update failed: " + error.message;
+    return;
+  }
+
+  message.textContent = "Your password has been updated successfully.";
+
+  document.getElementById("settingsNewPassword").value = "";
+  document.getElementById("settingsConfirmPassword").value = "";
+});
+  
 </script>
 
 
