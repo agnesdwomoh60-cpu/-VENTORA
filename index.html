@@ -2727,7 +2727,11 @@ document.getElementById("profileMenuButton").addEventListener("click", async fun
   const { data: { user }, error } = await ventoraSupabase.auth.getUser();
 
   if (error || !user) {
+    const homePage = document.getElementById("homePageContent");
     const accountSection = document.getElementById("accountSection");
+
+    homePage.hidden = false;
+
     if (accountSection) {
       accountSection.hidden = false;
       accountSection.scrollIntoView({ behavior: "smooth" });
@@ -2735,12 +2739,15 @@ document.getElementById("profileMenuButton").addEventListener("click", async fun
     return;
   }
 
+  const homePage = document.getElementById("homePageContent");
+  const dashboard = document.getElementById("userProfileDashboard");
+
+  homePage.hidden = true;
+
   await loadUserProfile(user);
 
-  const dashboard = document.getElementById("userProfileDashboard");
-  if (dashboard) {
-    dashboard.scrollIntoView({ behavior: "smooth", block: "start" });
-  }
+  dashboard.hidden = false;
+  window.scrollTo(0, 0);
 });  
 </script>
 
