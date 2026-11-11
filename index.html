@@ -2975,6 +2975,12 @@ document.getElementById("settingsNavigationButton").addEventListener("click", fu
   document.getElementById("mySubmissionsSection").hidden = true;
   document.getElementById("userSettingsSection").hidden = false;
 });
+document.getElementById("settingsEditProfileButton").addEventListener("click", function() {
+  document.getElementById("userSettingsSection").hidden = true;
+  document.getElementById("mySubmissionsSection").hidden = true;
+  document.getElementById("accountInformation").hidden = false;
+  document.getElementById("editProfileButton").click();
+});  
 </script>
 
 
