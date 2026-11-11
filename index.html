@@ -1850,7 +1850,7 @@ row.appendChild(sponsoredButton);
     document.getElementById("accountSection").hidden = true;
     document.getElementById("signOutButton").hidden = false;
     const { data: { user } } = await ventoraSupabase.auth.getUser();
-    await loadUserProfile(user);
+    
     const { data: adminRecord, error: adminError } = await ventoraSupabase.from("ventora_admins").select("user_id").eq("user_id", user.id).maybeSingle();
     if (adminError) {
       result.textContent = "Signed in, but administrator check failed.";
@@ -2721,6 +2721,25 @@ document.addEventListener("DOMContentLoaded", function() {
     loadVentoraCurrencyRates();
   });
 });
+document.getElementById("profileMenuButton").addEventListener("click", async function() {
+  const { data: { user }, error } = await ventoraSupabase.auth.getUser();
+
+  if (error || !user) {
+    const accountSection = document.getElementById("accountSection");
+    if (accountSection) {
+      accountSection.hidden = false;
+      accountSection.scrollIntoView({ behavior: "smooth" });
+    }
+    return;
+  }
+
+  await loadUserProfile(user);
+
+  const dashboard = document.getElementById("userProfileDashboard");
+  if (dashboard) {
+    dashboard.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+});  
 </script>
 
 <style>
