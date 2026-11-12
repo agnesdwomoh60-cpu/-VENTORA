@@ -3006,6 +3006,14 @@ document.getElementById("settingsNavigationButton").addEventListener("click", fu
   document.getElementById("mySubmissionsSection").hidden = true;
   document.getElementById("userSettingsSection").hidden = false;
 });
+  
+document.getElementById("subscriptionPromotionsButton").addEventListener("click", function() {
+  document.getElementById("accountInformation").hidden = true;
+  document.getElementById("mySubmissionsSection").hidden = true;
+  document.getElementById("userSettingsSection").hidden = true;
+  document.getElementById("subscriptionPromotionsSection").hidden = false;
+});
+
 document.getElementById("settingsEditProfileButton").addEventListener("click", function() {
   document.getElementById("userSettingsSection").hidden = true;
   document.getElementById("mySubmissionsSection").hidden = true;
