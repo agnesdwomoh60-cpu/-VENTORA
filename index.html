@@ -2743,7 +2743,92 @@ async function loadMyBusinessSubmissions(user) {
     item.appendChild(details);
     container.appendChild(item);
   });
-} 
+ }
+ 
+async function loadMyPromotions(user) {
+  const businessBox = document.getElementById("myBusinessPromotions");
+  const jobBox = document.getElementById("myJobPromotions");
+  const fashionBox = document.getElementById("myFashionPromotions");
+
+  const [businessResult, jobResult, fashionResult] = await Promise.all([
+    ventoraSupabase
+      .from("ventora_business_listings")
+      .select("business_name, is_featured")
+      .eq("user_id", user.id)
+      .order("created_at", { ascending: false }),
+
+    ventoraSupabase
+      .from("ventora_job_advertisements")
+      .select("company_name, job_title, is_sponsored, approval_status")
+      .eq("user_id", user.id)
+      .order("created_at", { ascending: false }),
+
+    ventoraSupabase
+      .from("fashion_listings")
+      .select("product_name, is_featured")
+      .eq("user_id", user.id)
+      .order("created_at", { ascending: false })
+  ]);
+
+  function displayPromotions(container, result, emptyMessage, getDetails) {
+    if (!container) return;
+
+    container.replaceChildren();
+
+    if (result.error) {
+      container.textContent =
+        "Could not load promotion information: " + result.error.message;
+      return;
+    }
+
+    if (!result.data || result.data.length === 0) {
+      container.textContent = emptyMessage;
+      return;
+    }
+
+    result.data.forEach(function (record) {
+      const item = document.createElement("p");
+      item.textContent = getDetails(record);
+      container.appendChild(item);
+    });
+  }
+
+  displayPromotions(
+    businessBox,
+    businessResult,
+    "You have not submitted any business listings yet.",
+    function (item) {
+      return (item.business_name || "Unnamed business") +
+        " — Featured promotion: " +
+        (item.is_featured ? "Active" : "Not active");
+    }
+  );
+
+  displayPromotions(
+    jobBox,
+    jobResult,
+    "You have not submitted any job advertisements yet.",
+    function (item) {
+      return (item.job_title || "Untitled job") +
+        " — " + (item.company_name || "Company not specified") +
+        " — Sponsorship: " +
+        (item.is_sponsored ? "Active" : "Not active") +
+        " — Approval: " + (item.approval_status || "Not available");
+    }
+  );
+
+  displayPromotions(
+    fashionBox,
+    fashionResult,
+    "You have not submitted any fashion products yet.",
+    function (item) {
+      return (item.product_name || "Unnamed product") +
+        " — Featured promotion: " +
+        (item.is_featured ? "Active" : "Not active");
+    }
+  );
+}
+ 
 async function loadUserProfile(user) {
   const dashboard = document.getElementById("userProfileDashboard");
 
@@ -2753,7 +2838,7 @@ async function loadUserProfile(user) {
 loadMyBusinessSubmissions(user);
   loadMyJobSubmissions(user);
 loadMyFashionSubmissions(user);
-  
+loadMyPromotions(user);  
   document.getElementById("profileEmail").textContent =
     user.email || "Not available";
 
